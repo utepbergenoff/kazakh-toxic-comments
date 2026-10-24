@@ -1,0 +1,12 @@
+.env
+data/01_raw/
+data/02_pool/
+data/03_sample/
+data/04_annotation/
+data/05_final/adjudicated.csv
+data/05_final/final_dataset.csv
+__pycache__/
+*.ipynb_checkpoints
+data/_test_run/
+venv/
+.DS_Store
