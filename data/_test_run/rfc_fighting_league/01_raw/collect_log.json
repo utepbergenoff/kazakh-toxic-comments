@@ -1,0 +1,13 @@
+{
+  "collected_at_utc": "2026-10-24T05:17:55+00:00",
+  "window": [
+    "2025-10-01T00:00:00Z",
+    "2025-12-31T23:59:59Z"
+  ],
+  "seed": 42,
+  "videos_per_channel": 8,
+  "max_threads_per_video": 150,
+  "min_comments": 20,
+  "comments": 1086,
+  "quota_units": 21
+}

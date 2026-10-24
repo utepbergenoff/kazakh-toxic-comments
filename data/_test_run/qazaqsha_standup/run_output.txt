@@ -1,0 +1,17 @@
+[ok] Qazaqsha StandUp Central: 125 videos in window, 30 eligible, 8 selected, 1122 comments  (quota used so far: 22)
+
+Done: 1122 comments, 22 quota units. Next: python src/sample.py --dry-run
+Raw comments: 1122   removed: 404   eligible pool: 718
+Removed by reason: {'SHORT': 220, 'NOTEXT': 177, 'DUP': 4, 'SPAM': 2, 'OTHERLANG': 1}
+
+Eligible pool by language guess:
+            no_keyword  keyword_match
+lang_guess                           
+KK                 602              2
+RU                 103              0
+CS                  11              0
+WARNING: KK pool is thin (need ~217 total, ~109 keyword matches). Consider adding channels before sampling.
+WARNING: RU pool is thin (need ~217 total, ~109 keyword matches). Consider adding channels before sampling.
+WARNING: CS pool is thin (need ~217 total, ~109 keyword matches). Consider adding channels before sampling.
+
+Dry run: nothing sampled.

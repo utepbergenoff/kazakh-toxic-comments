@@ -1,0 +1,1 @@
+Test run, window overridden to 2025-10-01..2025-12-31 (outside study window). Not study data.
