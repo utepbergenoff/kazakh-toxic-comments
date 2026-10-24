@@ -195,8 +195,25 @@ def main():
     pil_k, n4 = stratified(pool, "keyword", C.PILOT_KEYWORD_PER_LANG, C.SEED + 30, used)
     notes += n1 + n2 + [f"pilot {x}" for x in n3 + n4]
 
-    main = pd.concat([main_r, main_k]).sample(frac=1, random_state=C.SEED).assign(set="main")
-    pilot = pd.concat([pil_r, pil_k]).sample(frac=1, random_state=C.SEED).assign(set="pilot")
+    def top_up(parts, target, seed, label):
+        """If keyword matches ran out, fill the gap with extra random comments (balanced by language)."""
+        have = sum(len(p) for p in parts)
+        gap = target - have
+        if gap <= 0:
+            return parts
+        extra, _ = stratified(pool, "random", -(-gap // len(C.LANGS)), seed, used)
+        drop = extra.iloc[gap:]
+        used.difference_update(drop.comment_id)
+        extra = extra.iloc[:gap]
+        notes.append(f"{label}: keyword matches ran out; filled {len(extra)} with extra random comments")
+        return parts + [extra]
+
+    main_target = len(C.LANGS) * (C.MAIN_RANDOM_PER_LANG + C.MAIN_KEYWORD_PER_LANG)
+    main_parts = top_up([main_r, main_k], main_target, C.SEED + 40, "main")
+    pilot_parts = top_up([pil_r, pil_k], C.PILOT_TOTAL, C.SEED + 50, "pilot")
+
+    main = pd.concat(main_parts).sample(frac=1, random_state=C.SEED).assign(set="main")
+    pilot = pd.concat(pilot_parts).sample(frac=1, random_state=C.SEED).assign(set="pilot")
     pilot = pilot.head(C.PILOT_TOTAL)
     main["id"] = [f"C-{i:04d}" for i in range(1, len(main) + 1)]
     pilot["id"] = [f"P-{i:03d}" for i in range(1, len(pilot) + 1)]

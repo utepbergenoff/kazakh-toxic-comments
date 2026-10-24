@@ -8,7 +8,7 @@ POOL_DIR = "data/02_pool"        # private, not committed
 SAMPLE_DIR = "data/03_sample"    # private, not committed
 
 # ---- video selection (Methods: frame frozen before collection) ----------
-WINDOW_START = "2026-01-01T00:00:00Z"   # videos published on/after
+WINDOW_START = "2025-10-01T00:00:00Z"   # videos published on/after
 WINDOW_END = "2026-09-30T23:59:59Z"     # videos published on/before
 MIN_COMMENTS = 20                        # video eligibility
 VIDEOS_PER_CHANNEL = 8

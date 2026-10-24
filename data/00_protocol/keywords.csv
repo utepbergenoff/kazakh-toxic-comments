@@ -1,3 +1,76 @@
 keyword,language,script,variant_of,harm_type,added_by,notes
 дурак,russian,cyrillic,,insult,yerlan,also matches дураки
 ақымақ,kazakh,cyrillic,дурак,insult,yerlan
+ақымақ,kk,cyrillic,,insult,claude-draft,fool
+aqymaq,kk,latin,ақымақ,insult,claude-draft,Latin spelling
+акымак,kk,cyrillic,ақымақ,insult,claude-draft,written without Kazakh letters
+топас,kk,cyrillic,,insult,claude-draft,dumb
+мисыз,kk,cyrillic,,insult,claude-draft,brainless
+ессіз,kk,cyrillic,,insult,claude-draft,senseless/crazy
+жынды,kk,cyrillic,,insult,claude-draft,crazy; also used jokingly - check in pilot
+надан,kk,cyrillic,,insult,claude-draft,ignorant
+дүмше,kk,cyrillic,,insult,claude-draft,half-educated
+малғұн,kk,cyrillic,,insult,claude-draft,scoundrel
+оңбаған,kk,cyrillic,,insult,claude-draft,worthless person
+онбаган,kk,cyrillic,оңбаған,insult,claude-draft,written without Kazakh letters
+жексұрын,kk,cyrillic,,insult,claude-draft,disgusting person
+сұмырай,kk,cyrillic,,insult,claude-draft,scoundrel
+арсыз,kk,cyrillic,,insult,claude-draft,shameless
+қаңғыбас,kk,cyrillic,,insult,claude-draft,vagabond
+шошқа,kk,cyrillic,,insult,claude-draft,pig; also literal - check in pilot
+иттің баласы,kk,cyrillic,,insult,claude-draft,son of a dog
+мәңгүрт,kk,cyrillic,,slur,claude-draft,used against Russian-speaking Kazakhs
+мангурт,kk,cyrillic,мәңгүрт,slur,claude-draft,written without Kazakh letters
+шала қазақ,kk,cyrillic,,slur,claude-draft,half-Kazakh
+шала казах,ru,cyrillic,шала қазақ,slur,claude-draft,Russian spelling
+шоқынды,kk,cyrillic,,slur,claude-draft,used against Russians/converts
+кәпір,kk,cyrillic,,slur,claude-draft,infidel; religious
+сатқын,kk,cyrillic,,other,claude-draft,traitor; political hostility
+сігейін,kk,cyrillic,,profanity,claude-draft
+сіктір,kk,cyrillic,,profanity,claude-draft
+қотақ,kk,cyrillic,,profanity,claude-draft
+шешеңді,kk,cyrillic,,profanity,claude-draft,start of curse formulas; can be neutral - check in pilot
+өлтіремін,kk,cyrillic,,threat,claude-draft,I will kill
+өліп кет,kk,cyrillic,,threat,claude-draft,go die
+өлсін,kk,cyrillic,,threat,claude-draft,let them die
+дурак,ru,cyrillic,,insult,claude-draft
+идиот,ru,cyrillic,,insult,claude-draft
+дебил,ru,cyrillic,,insult,claude-draft
+д*бил,ru,cyrillic,дебил,insult,claude-draft,censored form
+кретин,ru,cyrillic,,insult,claude-draft
+придур,ru,cyrillic,,insult,claude-draft,stem: придурок/придурки
+тупой,ru,cyrillic,,insult,claude-draft
+тупая,ru,cyrillic,тупой,insult,claude-draft
+тупые,ru,cyrillic,тупой,insult,claude-draft
+урод,ru,cyrillic,,insult,claude-draft
+мразь,ru,cyrillic,,insult,claude-draft
+тварь,ru,cyrillic,,insult,claude-draft
+скотин,ru,cyrillic,,insult,claude-draft,stem: скотина/скотины
+сволоч,ru,cyrillic,,insult,claude-draft,stem: сволочь/сволочи
+ублюд,ru,cyrillic,,insult,claude-draft,stem: ублюдок/ублюдки
+чмо,ru,cyrillic,,insult,claude-draft
+лошара,ru,cyrillic,,insult,claude-draft
+шлюх,ru,cyrillic,,insult,claude-draft,stem: шлюха/шлюхи
+сука,ru,cyrillic,,profanity,claude-draft
+мудак,ru,cyrillic,,profanity,claude-draft
+долбо,ru,cyrillic,,profanity,claude-draft,stem: долбоёб/долбоеб
+блять,ru,cyrillic,,profanity,claude-draft
+бляд,ru,cyrillic,блять,profanity,claude-draft
+бл*ть,ru,cyrillic,блять,profanity,claude-draft,censored form
+хуй,ru,cyrillic,,profanity,claude-draft,also inside нахуй/хуйня
+х*й,ru,cyrillic,хуй,profanity,claude-draft,censored form
+пизд,ru,cyrillic,,profanity,claude-draft,stem
+ебан,ru,cyrillic,,profanity,claude-draft,stem
+ёбан,ru,cyrillic,ебан,profanity,claude-draft,spelling with ё
+гандон,ru,cyrillic,,profanity,claude-draft
+убью,ru,cyrillic,,threat,claude-draft
+сдохни,ru,cyrillic,,threat,claude-draft
+сдохнут,ru,cyrillic,сдохни,threat,claude-draft
+чурк,ru,cyrillic,,slur,claude-draft,ethnic slur against Central Asians
+мамбет,ru,cyrillic,,slur,claude-draft,slur for rural Kazakhs; also a personal name - check in pilot
+калбит,ru,cyrillic,,slur,claude-draft,ethnic slur against Kazakhs
+нерусь,ru,cyrillic,,slur,claude-draft,ethnic slur
+узкоглаз,ru,cyrillic,,slur,claude-draft,ethnic slur against Asians
+черножоп,ru,cyrillic,,slur,claude-draft,ethnic slur
+китаёз,ru,cyrillic,,slur,claude-draft,ethnic slur against Chinese
+пидор,ru,cyrillic,,slur,claude-draft,homophobic slur
