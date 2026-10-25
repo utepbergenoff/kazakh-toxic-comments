@@ -125,7 +125,7 @@ mBERT & 0.340 $\pm$ 0.043 & 0.533 & 0.414 & 0.075 & 0.426 & 0.213 \\
 LLM (best config) & \textbf{0.575} $\pm$ 0.104 & \textbf{0.757} & \textbf{0.641} & \textbf{0.326} & \textbf{0.652} & \textbf{0.597} \\
 \bottomrule
 \end{tabular}
-\par\smallskip\footnotesize Mean over the 5 test folds; macro-F1 also $\pm$ SD over folds. Transformers: fold metrics averaged over 5 seeds (SD of the 5-fold mean over seeds: XLM-R 0.019, mBERT 0.010). LLM: configuration chosen per fold on validation macro-F1. Best value per column in bold. Bootstrap differences (Figure~\ref{fig:bootstrap}) are computed on pooled out-of-fold predictions (transformers: seed-averaged scores), so their point estimates differ from the means over folds in this table.
+\par\smallskip\footnotesize Mean over the 5 test folds; macro-F1 also $\pm$ SD over folds. Transformers: fold metrics averaged over 5 seeds (SD of the 5-fold mean over seeds: XLM-R 0.019, mBERT 0.010). LLM: configuration chosen per fold on validation macro-F1. Best value per column in bold. Bootstrap differences (Figure~\ref{fig:bootstrap}) are computed on pooled out-of-fold predictions (transformers: macro-F1 of each of the 5 seed runs, then averaged), so their point estimates differ from the means over folds in this table.
 \end{table}
 ```
 
@@ -227,30 +227,46 @@ Selected per fold (LLM best) & 0.575 $\pm$ 0.104 & 0.757 & 0.641 & 0.326 & -- & 
 \end{figure}
 ```
 
-`F1_note.tex` says: *"Differences use pooled out-of-fold predictions (transformers: seed-averaged
-scores), so point estimates differ from the means over folds in Table~\ref{tab:main}."*
+`F1_note.tex` says: *"Differences use pooled out-of-fold predictions, the same thread resamples for
+every system and, for transformers, the mean of the macro-F1 of the 5 seed runs, so point estimates
+differ from the means over folds in Table~\ref{tab:main}."*
+
+### T7 — per-label metrics (`results/tables/T7_label_metrics.tex`, new)
+
+Precision, recall, F1, accuracy per label for every system; ROC-AUC and average precision for systems
+with continuous scores (`--` for the all-positive reference and the binary LLM configs, explained in
+the footnote). Mean over the 5 test folds, same convention as T3; SDs are in
+`results/analysis/label_metrics.csv`. The script checks that its F1 values equal T3/T6 and its
+ROC-AUC/AP equal `summary.csv`. New in T7: ROC-AUC for LLM-best (toxic 0.832, offensive 0.822,
+hate 0.634); T6 shows `--` there. 33 rows, so it may need `\footnotesize` or trimming to the main
+systems.
 
 ---
 
-## 4. Bootstrap (`results/analysis/bootstrap.csv`) — Figure 1
+## 4. Bootstrap (`results/analysis/bootstrap.csv`) — Figure 1 (recomputed per Methods)
 
 Paired grouped bootstrap: 10,000 resamples of whole threads (545 threads), seed 42, 97.5 % percentile
-intervals, both systems scored on the same resample.
+intervals, **the same resamples for every system**. Transformers: in each resample the macro-F1 of
+each of the 5 seed runs (each with its own validation thresholds) is computed and then averaged.
+(The earlier version used seed-averaged predictions, which gave +0.063 / +0.116. Those numbers are
+**superseded**; don't use them.)
 
 | Contrast | Type | Pooled macro-F1 B | Pooled macro-F1 A | Δ (B − A) | 97.5 % interval | share Δ ≤ 0 |
 |---|---|---|---|---|---|---|
-| XLM-R − LR-TFIDF | **prespecified** | 0.403 | 0.341 | +0.063 | [+0.024, +0.101] | 0.000 |
-| LLM-best − XLM-R | **prespecified** | 0.520 | 0.403 | +0.116 | [+0.071, +0.162] | 0.000 |
+| XLM-R − LR-TFIDF | **prespecified** | 0.362 | 0.341 | +0.021 | [−0.012, +0.055] | 0.077 |
+| LLM-best − XLM-R | **prespecified** | 0.520 | 0.362 | +0.158 | [+0.116, +0.200] | 0.000 |
 | LR-TFIDF − All-positive | exploratory | 0.341 | 0.326 | +0.015 | [−0.019, +0.048] | 0.158 |
-| XLM-R − All-positive | exploratory | 0.403 | 0.326 | +0.078 | [+0.044, +0.109] | 0.000 |
-| mBERT − All-positive | exploratory | 0.365 | 0.326 | +0.039 | [+0.005, +0.072] | 0.005 |
+| XLM-R − All-positive | exploratory | 0.362 | 0.326 | +0.036 | [+0.015, +0.057] | 0.000 |
+| mBERT − All-positive | exploratory | 0.357 | 0.326 | +0.031 | [+0.009, +0.054] | 0.002 |
 | LLM-best − All-positive | exploratory | 0.520 | 0.326 | +0.194 | [+0.148, +0.240] | 0.000 |
 
 Facts to be careful with:
-- Both prespecified intervals exclude zero. LR-TFIDF vs the reference includes zero.
+- **XLM-R − LR-TFIDF includes zero**, so no significant advantage of XLM-R over LR. LLM-best − XLM-R
+  excludes zero. LR-TFIDF vs the reference includes zero.
 - **Pooled ≠ table values.** The bootstrap scores all out-of-fold predictions pooled together; T3 is the
-  mean of 5 fold scores. XLM-R 0.403 pooled vs 0.350 in T3; mBERT 0.365 vs 0.340; LR-TFIDF 0.341 vs
+  mean of 5 fold scores. XLM-R 0.362 pooled vs 0.350 in T3; mBERT 0.357 vs 0.340; LR-TFIDF 0.341 vs
   0.329; LLM-best 0.520 vs **0.575** (lower when pooled — see the fold-3 issue in section 5).
+- These numbers match the reviewer's own recomputation (+0.021 [−0.012; +0.055], +0.158 [+0.116; +0.200]).
 
 ---
 
@@ -286,7 +302,8 @@ Facts to be careful with:
 
 ## 6. Confusion matrices (`results/analysis/confusion.csv`) — Figure 2
 
-Pooled out-of-fold predictions, all 554 comments.
+Pooled out-of-fold predictions, all 554 comments. A confusion matrix needs one prediction per comment,
+so XLM-R here uses the seed-averaged scores (`oof_XLM-R_seedmean.csv`), unlike the bootstrap.
 
 | System | Label | TN | FP | FN | TP |
 |---|---|---|---|---|---|
@@ -367,9 +384,10 @@ comments in the paper.
 - [ ] Annotation section: main set by consensus, **pilot (50) labelled independently by both**; κ is
       now measured (T2) — delete every "expected ≥ 0.60 / TBD / not measured".
 - [ ] Rule offensive/hate ⇒ toxic changed **52** labels (not 29).
-- [ ] Replace all tables with the new `.tex` files (T1–T6) and both figures.
-- [ ] Results text: v1 said trained models ≈ reference and transformers not better than LR — **no longer
-      true**. XLM-R − LR-TFIDF is now +0.063 [+0.024, +0.101]; XLM-R and mBERT beat the reference.
+- [ ] Replace all tables with the new `.tex` files (T1–T7) and both figures.
+- [ ] Results text (§3.3): XLM-R − LR-TFIDF is +0.021 [−0.012, +0.055], **not significant**. Remove
+      any claim that XLM-R is significantly better than LR. LLM-best − XLM-R +0.158 [+0.116, +0.200]
+      stays significant. XLM-R and mBERT are above the reference (exploratory intervals exclude zero).
 - [ ] LLM numbers: LLM-best 0.509 → **0.575**; configs now 0.497–0.582 (v1 0.498–0.567).
 - [ ] Error analysis / confusion figure is now **XLM-R** (best trained model), not mBERT.
 - [ ] Mention pooled-vs-fold-mean difference (T3 footnote / F1 caption already say it).

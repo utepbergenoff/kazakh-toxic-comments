@@ -49,7 +49,7 @@ for the teammate's error analysis (folder still ignored). `labels.xlsx` and `fin
 | Transformers (XLM-R, mBERT, E3 mBERT-lower) | `notebooks/transformers.ipynb` | done (75 runs, 20.8 min wall / 1,205 s training on RTX 3070 Ti) | `results/transformers/` |
 | LSTM, BERT+LSTM | — | **optional / likely skipped** (report as time deviation) | |
 | LLM (gpt-4.1-mini) | `src/llm.py` | done (3,324 responses, 0 retries, 0 fallbacks, ≈ $1.25 total) | `results/llm/`, private cache `data/06_llm/` |
-| Bootstrap, confusion matrices, figures, LaTeX tables | `src/analysis.py` | done | `results/analysis/`, `results/tables/` (T1–T6, `F1_note.tex`), `results/figures/` (F1, F2), private `data/07_errors/` |
+| Bootstrap, confusion matrices, figures, LaTeX tables | `src/analysis.py` | done | `results/analysis/`, `results/tables/` (T1–T7, `F1_note.tex`), `results/figures/` (F1, F2), private `data/07_errors/` |
 
 Shared config: `config.py` (paths, seed 42, sampling sizes). Shared metrics: `src/metrics.py`
 (`evaluate`, `best_threshold`, `by_language`) — **reuse it for every model** so numbers are comparable.
@@ -133,22 +133,29 @@ C ∈ {0.1, 1, 10}, class_weight ∈ {none, balanced}.
 
 ## Bootstrap (`results/analysis/bootstrap.csv`; 10,000 thread resamples, 97.5 % percentile intervals)
 
-Pooled out-of-fold macro-F1 differs from the mean over folds (transformers = seed-mean predictions):
-XLM-R 0.403 pooled vs 0.350 in T3; mBERT 0.365 vs 0.340; LR-TFIDF 0.341 vs 0.329; LLM-best 0.520 vs
-0.575 (LLM-best is lower pooled because of the fold-3 hate artefact). T3 footnote and
-`results/tables/F1_note.tex` say so.
+Per Methods (reviewer correction, 2026-10-25): the same thread resamples for every system; for
+transformers the macro-F1 of **each of the 5 seed runs** (`oof_<model>_seed<s>.csv`, own thresholds)
+is computed per resample and then averaged (earlier version used seed-mean predictions: XLM-R 0.403,
+contrasts +0.063 / +0.116 — superseded, do not use). Pooled out-of-fold macro-F1 differs from the
+mean over folds: XLM-R 0.362 pooled vs 0.350 in T3; mBERT 0.357 vs 0.340; LR-TFIDF 0.341 vs 0.329;
+LLM-best 0.520 vs 0.575 (lower pooled because of the fold-3 hate artefact). T3 footnote and
+`results/tables/F1_note.tex` say so. Confusion matrices (F2) and error files still use the seed-mean
+predictions (one prediction per comment needed).
 
 | Contrast | Type | Δ macro-F1 | 97.5 % interval |
 |---|---|---|---|
-| XLM-R − LR-TFIDF | prespecified | +0.063 | [+0.024, +0.101] |
-| LLM-best − XLM-R | prespecified | +0.116 | [+0.071, +0.162] |
+| XLM-R − LR-TFIDF | prespecified | +0.021 | [−0.012, +0.055] |
+| LLM-best − XLM-R | prespecified | +0.158 | [+0.116, +0.200] |
 | LR-TFIDF − All-positive | exploratory | +0.015 | [−0.019, +0.048] |
-| XLM-R − All-positive | exploratory | +0.078 | [+0.044, +0.109] |
-| mBERT − All-positive | exploratory | +0.039 | [+0.005, +0.072] |
+| XLM-R − All-positive | exploratory | +0.036 | [+0.015, +0.057] |
+| mBERT − All-positive | exploratory | +0.031 | [+0.009, +0.054] |
 | LLM-best − All-positive | exploratory | +0.194 | [+0.148, +0.240] |
 
-Both prespecified intervals exclude zero; LR-TFIDF vs the reference does not. Tables:
-`results/tables/T1_dataset.tex` … `T6_llm_configs.tex` (`\input{}` them; captions are stubs).
+XLM-R vs LR-TFIDF is **not** significant (interval includes zero); LLM-best vs XLM-R is. Tables:
+`results/tables/T1_dataset.tex` … `T7_label_metrics.tex` (`\input{}` them; captions are stubs).
+T7 = per-label precision/recall/F1/accuracy + ROC-AUC/AP (mean over folds; `--` for all-positive
+and binary LLM configs), source `results/analysis/label_metrics.csv` (also has SDs); F1 and AUC/AP
+are asserted equal to the summary.csv values.
 Figures: `F1_bootstrap.pdf`, `F2_confusion.pdf` (XLM-R = best trained model, LLM-best). Error review
 files (100 each, with text): `data/07_errors/errors_{XLM-R,LLM-best}.csv` (also `errors_mBERT.csv` from
 the first v2 pass; v1 files in `data/07_errors/v1/`).

@@ -17,5 +17,5 @@ mBERT & 0.340 $\pm$ 0.043 & 0.533 & 0.414 & 0.075 & 0.426 & 0.213 \\
 LLM (best config) & \textbf{0.575} $\pm$ 0.104 & \textbf{0.757} & \textbf{0.641} & \textbf{0.326} & \textbf{0.652} & \textbf{0.597} \\
 \bottomrule
 \end{tabular}
-\par\smallskip\footnotesize Mean over the 5 test folds; macro-F1 also $\pm$ SD over folds. Transformers: fold metrics averaged over 5 seeds (SD of the 5-fold mean over seeds: XLM-R 0.019, mBERT 0.010). LLM: configuration chosen per fold on validation macro-F1. Best value per column in bold. Bootstrap differences (Figure~\ref{fig:bootstrap}) are computed on pooled out-of-fold predictions (transformers: seed-averaged scores), so their point estimates differ from the means over folds in this table.
+\par\smallskip\footnotesize Mean over the 5 test folds; macro-F1 also $\pm$ SD over folds. Transformers: fold metrics averaged over 5 seeds (SD of the 5-fold mean over seeds: XLM-R 0.019, mBERT 0.010). LLM: configuration chosen per fold on validation macro-F1. Best value per column in bold. Bootstrap differences (Figure~\ref{fig:bootstrap}) are computed on pooled out-of-fold predictions (transformers: macro-F1 of each of the 5 seed runs, then averaged), so their point estimates differ from the means over folds in this table.
 \end{table}

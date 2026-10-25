@@ -1,0 +1,48 @@
+\begin{table}[htbp]
+\centering
+\caption{Per-label metrics.}
+\label{tab:labelmetrics}
+\begin{tabular}{llrrrrrr}
+\toprule
+System & Label & Precision & Recall & F1 & Accuracy & ROC-AUC & AP \\
+\midrule
+All-positive (reference) & Toxic & 0.354 & 1.000 & 0.523 & 0.354 & -- & -- \\
+ & Offensive & 0.233 & 1.000 & 0.377 & 0.233 & -- & -- \\
+ & Hate & 0.040 & 1.000 & 0.075 & 0.040 & -- & -- \\
+\midrule
+LR-TFIDF & Toxic & 0.408 & 0.786 & 0.535 & 0.520 & 0.630 & 0.506 \\
+ & Offensive & 0.246 & 0.547 & 0.333 & 0.540 & 0.609 & 0.332 \\
+ & Hate & 0.072 & 0.405 & 0.117 & 0.719 & 0.582 & 0.075 \\
+SVM-TFIDF & Toxic & 0.399 & 0.760 & 0.522 & 0.507 & 0.618 & 0.491 \\
+ & Offensive & 0.240 & 0.587 & 0.331 & 0.500 & 0.613 & 0.353 \\
+ & Hate & 0.064 & 0.310 & 0.100 & 0.723 & 0.588 & 0.076 \\
+LR-Count & Toxic & 0.390 & 0.705 & 0.499 & 0.502 & 0.583 & 0.449 \\
+ & Offensive & 0.260 & 0.618 & 0.356 & 0.490 & 0.575 & 0.315 \\
+ & Hate & 0.044 & 0.305 & 0.075 & 0.711 & 0.567 & 0.074 \\
+\midrule
+XLM-R & Toxic & 0.442 & 0.802 & 0.560 & 0.549 & 0.659 & 0.514 \\
+ & Offensive & 0.326 & 0.733 & 0.435 & 0.554 & 0.690 & 0.413 \\
+ & Hate & 0.031 & 0.370 & 0.054 & 0.648 & 0.498 & 0.087 \\
+mBERT & Toxic & 0.402 & 0.817 & 0.533 & 0.493 & 0.633 & 0.525 \\
+ & Offensive & 0.341 & 0.637 & 0.414 & 0.611 & 0.689 & 0.433 \\
+ & Hate & 0.045 & 0.367 & 0.075 & 0.640 & 0.522 & 0.107 \\
+\midrule
+LLM zero-shot binary & Toxic & 0.739 & 0.714 & 0.725 & 0.809 & -- & -- \\
+ & Offensive & 0.705 & 0.599 & 0.645 & 0.847 & -- & -- \\
+ & Hate & 0.450 & 0.324 & 0.370 & 0.957 & -- & -- \\
+LLM zero-shot score & Toxic & 0.661 & 0.771 & 0.708 & 0.776 & 0.845 & 0.750 \\
+ & Offensive & 0.665 & 0.660 & 0.642 & 0.828 & 0.848 & 0.711 \\
+ & Hate & 0.163 & 0.333 & 0.141 & 0.771 & 0.648 & 0.308 \\
+LLM 6-shot binary & Toxic & 0.737 & 0.684 & 0.709 & 0.801 & -- & -- \\
+ & Offensive & 0.657 & 0.675 & 0.658 & 0.838 & -- & -- \\
+ & Hate & 0.424 & 0.357 & 0.377 & 0.953 & -- & -- \\
+LLM 6-shot score & Toxic & 0.764 & 0.750 & 0.755 & 0.829 & 0.830 & 0.726 \\
+ & Offensive & 0.712 & 0.647 & 0.664 & 0.848 & 0.819 & 0.621 \\
+ & Hate & 0.446 & 0.433 & 0.326 & 0.784 & 0.636 & 0.248 \\
+LLM (best config) & Toxic & 0.743 & 0.781 & 0.757 & 0.821 & 0.832 & 0.734 \\
+ & Offensive & 0.676 & 0.655 & 0.641 & 0.828 & 0.822 & 0.641 \\
+ & Hate & 0.446 & 0.433 & 0.326 & 0.784 & 0.634 & 0.263 \\
+\bottomrule
+\end{tabular}
+\par\smallskip\footnotesize Mean over the 5 test folds (transformers: fold metrics averaged over 5 seeds). ROC-AUC and average precision (AP) need continuous scores: -- for the all-positive reference and for the binary LLM configurations, which return only 0/1 labels. Classical models rank by probability (LR) or decision value (SVM); LLM score configurations by the returned score.
+\end{table}

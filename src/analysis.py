@@ -3,11 +3,12 @@
   python src/analysis.py
 
 Reads the pooled out-of-fold predictions and summaries in results/classical, results/transformers
-(seed-mean predictions) and results/llm, plus data/05_final/final_dataset.csv for thread ids.
+(per-seed predictions; seed-mean predictions for confusion matrices and errors) and results/llm, plus
+data/05_final/final_dataset.csv for thread ids.
 
 Bootstrap (Methods 2.3, pilot adaptation): 10,000 resamples of whole comment threads with replacement;
-both systems of a contrast are scored on the same resample; difference in pooled macro-F1;
-97.5% percentile interval. Prespecified: XLM-R - LR-TFIDF and LLM-best - XLM-R. The contrasts against
+the same resamples for every system; pooled macro-F1 per resample (transformers: macro-F1 of each of
+the 5 seed runs with its own thresholds, then averaged); difference in macro-F1; 97.5% percentile interval. Prespecified: XLM-R - LR-TFIDF and LLM-best - XLM-R. The contrasts against
 the all-positive reference are exploratory.
 
 Writes:
@@ -36,21 +37,38 @@ DATA = "data/05_final/final_dataset.csv"
 REPORT = "data/05_final/dataset_report.md"
 AGREEMENT = "results/annotation/agreement.csv"
 POOLED_NOTE = ("Bootstrap differences (Figure~\\ref{fig:bootstrap}) are computed on pooled out-of-fold "
-               "predictions (transformers: seed-averaged scores), so their point estimates differ "
-               "from the means over folds in this table.")
+               "predictions (transformers: macro-F1 of each of the 5 seed runs, then averaged), so their point "
+               "estimates differ from the means over folds in this table.")
 OUT, TABLES, FIGURES, ERRORS = "results/analysis", "results/tables", "results/figures", "data/07_errors"
 SEED = 42
 N_BOOT = 10_000
 CI = 0.975
 N_ERRORS = 100
 
-OOF = {"All-positive": "results/classical/oof_All-positive.csv",
-       "LR-TFIDF": "results/classical/oof_LR-TFIDF.csv",
-       "SVM-TFIDF": "results/classical/oof_SVM-TFIDF.csv",
-       "LR-Count": "results/classical/oof_LR-Count.csv",
-       "XLM-R": "results/transformers/oof_XLM-R_seedmean.csv",
-       "mBERT": "results/transformers/oof_mBERT_seedmean.csv",
-       "LLM-best": "results/llm/oof_LLM-best.csv"}
+SEEDS = [13, 21, 42, 87, 100]
+# a list of files = one file per seed run; bootstrap and point estimate average the per-run macro-F1
+OOF = {"All-positive": ["results/classical/oof_All-positive.csv"],
+       "LR-TFIDF": ["results/classical/oof_LR-TFIDF.csv"],
+       "SVM-TFIDF": ["results/classical/oof_SVM-TFIDF.csv"],
+       "LR-Count": ["results/classical/oof_LR-Count.csv"],
+       "XLM-R": [f"results/transformers/oof_XLM-R_seed{s}.csv" for s in SEEDS],
+       "mBERT": [f"results/transformers/oof_mBERT_seed{s}.csv" for s in SEEDS],
+       "LLM-best": ["results/llm/oof_LLM-best.csv"]}
+# confusion matrices and the error export need one prediction per comment: seed-averaged transformer scores
+SINGLE_OOF = {**{k: v[0] for k, v in OOF.items()},
+              "XLM-R": "results/transformers/oof_XLM-R_seedmean.csv",
+              "mBERT": "results/transformers/oof_mBERT_seedmean.csv"}
+# T7: per-label metrics; (summary name, display name, has continuous scores)
+METRIC_SYSTEMS = [("All-positive (reference)", "All-positive (reference)", False),
+                  ("LR-TFIDF", "LR-TFIDF", True), ("SVM-TFIDF", "SVM-TFIDF", True), ("LR-Count", "LR-Count", True),
+                  ("XLM-R", "XLM-R", True), ("mBERT", "mBERT", True),
+                  ("LLM-zero-bin", "LLM zero-shot binary", False), ("LLM-zero-score", "LLM zero-shot score", True),
+                  ("LLM-6shot-bin", "LLM 6-shot binary", False), ("LLM-6shot-score", "LLM 6-shot score", True),
+                  ("LLM-best", "LLM (best config)", True)]
+METRIC_OOF = {"All-positive (reference)": "results/classical/oof_All-positive.csv",
+              **{k: f"results/classical/oof_{k}.csv" for k in ("LR-TFIDF", "SVM-TFIDF", "LR-Count")},
+              **{k: f"results/llm/oof_{k}.csv" for k in ("LLM-zero-bin", "LLM-zero-score", "LLM-6shot-bin",
+                                                         "LLM-6shot-score", "LLM-best")}}
 SUMMARIES = ["results/classical/summary.csv", "results/transformers/summary.csv", "results/llm/summary.csv"]
 PRESPECIFIED = [("XLM-R", "LR-TFIDF"), ("LLM-best", "XLM-R")]          # (B, A): difference = B - A
 EXPLORATORY = [(s, "All-positive") for s in ("LR-TFIDF", "XLM-R", "mBERT", "LLM-best")]
@@ -73,13 +91,16 @@ def load():
     df = pd.read_csv(DATA)
     gold = df[["id", "lang"] + LABELS].sort_values("id").reset_index(drop=True)
     preds = {}
-    for name, path in OOF.items():
-        o = pd.read_csv(path).sort_values("id").reset_index(drop=True)
-        # every system must be scored on the same comments with the same gold labels
-        assert o["id"].tolist() == gold["id"].tolist(), name
-        assert (o[LABELS].to_numpy() == gold[LABELS].to_numpy()).all(), name
-        assert (o["lang"] == gold["lang"]).all(), name
-        preds[name] = o[PRED].to_numpy(int)
+    for name, paths in OOF.items():
+        runs = []
+        for path in paths:
+            o = pd.read_csv(path).sort_values("id").reset_index(drop=True)
+            # every system must be scored on the same comments with the same gold labels
+            assert o["id"].tolist() == gold["id"].tolist(), path
+            assert (o[LABELS].to_numpy() == gold[LABELS].to_numpy()).all(), path
+            assert (o["lang"] == gold["lang"]).all(), path
+            runs.append(o[PRED].to_numpy(int))
+        preds[name] = np.stack(runs)                                     # (runs, comments, labels)
     threads = df.set_index("id").loc[gold["id"], "thread_id"].to_numpy()
     summary = pd.concat([pd.read_csv(p) for p in SUMMARIES], ignore_index=True).set_index("system")
     return df, gold, preds, threads, summary
@@ -109,40 +130,47 @@ def bootstrap(gold, preds, threads):
     G = len(uniq)
     Y = gold[LABELS].to_numpy(int)
     rng = np.random.default_rng(SEED)
-    W = rng.multinomial(G, np.full(G, 1 / G), size=N_BOOT).astype(float)   # thread draw counts per resample
-    C = {s: thread_counts(Y, P, codes, G) for s, P in preds.items()}
+    W = rng.multinomial(G, np.full(G, 1 / G), size=N_BOOT).astype(float)   # one set of draws for all systems
+    C = {s: [thread_counts(Y, P, codes, G) for P in runs] for s, runs in preds.items()}
 
     # check: full-data point estimate equals metrics.evaluate, and the vectorised bootstrap equals a loop
     rows_of = [np.flatnonzero(codes == g) for g in range(G)]
-    for s, P in preds.items():
-        assert abs(macro_f1_from_counts(C[s].sum(0, keepdims=True))[0] - evaluate(Y, P)["macro_f1"]) < 1e-12, s
-    fast = macro_f1_from_counts(W[:200] @ C["LLM-best"])
+    for s, runs in preds.items():
+        for c, P in zip(C[s], runs):
+            assert abs(macro_f1_from_counts(c.sum(0, keepdims=True))[0] - evaluate(Y, P)["macro_f1"]) < 1e-12, s
+    fast = {s: np.mean([macro_f1_from_counts(W[:200] @ c) for c in C[s]], axis=0) for s in ("LLM-best", "XLM-R")}
     for b in range(200):
         idx = np.concatenate([np.repeat(rows_of[g], int(W[b, g])) for g in range(G) if W[b, g]])
-        assert abs(fast[b] - evaluate(Y[idx], preds["LLM-best"][idx])["macro_f1"]) < 1e-12, b
+        for s in fast:
+            slow = np.mean([evaluate(Y[idx], P[idx])["macro_f1"] for P in preds[s]])
+            assert abs(fast[s][b] - slow) < 1e-12, (s, b)
 
-    boot = {s: macro_f1_from_counts(W @ C[s]) for s in preds}
+    # per resample: macro-F1 of each run, averaged over runs (5 seed runs for transformers, 1 otherwise)
+    boot = {s: np.mean([macro_f1_from_counts(W @ c) for c in C[s]], axis=0) for s in preds}
+    point = {s: float(np.mean([evaluate(Y, P)["macro_f1"] for P in runs])) for s, runs in preds.items()}
     lo_q, hi_q = (1 - CI) / 2, 1 - (1 - CI) / 2
     rows = []
     for kind, pairs in (("prespecified", PRESPECIFIED), ("exploratory", EXPLORATORY)):
         for b, a in pairs:
             d = boot[b] - boot[a]
-            point_b, point_a = evaluate(Y, preds[b])["macro_f1"], evaluate(Y, preds[a])["macro_f1"]
+            point_b, point_a = point[b], point[a]
             lo, hi = np.quantile(d, [lo_q, hi_q])
             rows.append({"contrast": f"{b} - {a}", "type": kind, "system_b": b, "system_a": a,
                          "macro_f1_b": point_b, "macro_f1_a": point_a, "diff": point_b - point_a,
                          "ci_low": lo, "ci_high": hi, "share_diff_le_0": float((d <= 0).mean()),
                          "boot_sd": float(d.std(ddof=1)), "ci_level": CI, "n_resamples": N_BOOT,
-                         "n_threads": G})
+                         "n_threads": G, "runs_b": len(preds[b]), "runs_a": len(preds[a])})
     return pd.DataFrame(rows)
 
 
 # ------------------------------------------------------------ confusion, errors
-def confusion(gold, preds):
+def confusion(gold):
     Y = gold[LABELS].to_numpy(int)
     rows = []
     for s in CONFUSION_SYSTEMS:
-        r = evaluate(Y, preds[s])
+        o = pd.read_csv(SINGLE_OOF[s]).sort_values("id").reset_index(drop=True)
+        assert o["id"].tolist() == gold["id"].tolist(), s
+        r = evaluate(Y, o[PRED].to_numpy(int))
         for lab in LABELS:
             tp, fp, fn = r[f"{lab}_tp"], r[f"{lab}_fp"], r[f"{lab}_fn"]
             rows.append({"system": s, "label": lab, "tn": len(Y) - tp - fp - fn, "fp": fp, "fn": fn, "tp": tp})
@@ -154,7 +182,7 @@ def export_errors(df, gold):
     text = df.set_index("id")["text"]
     counts = {}
     for s in CONFUSION_SYSTEMS:
-        o = pd.read_csv(OOF[s]).sort_values("id").reset_index(drop=True)
+        o = pd.read_csv(SINGLE_OOF[s]).sort_values("id").reset_index(drop=True)
         is_wrong = (o[LABELS].to_numpy() != o[PRED].to_numpy()).any(axis=1)
         wrong = o[is_wrong]
         if len(wrong) > N_ERRORS:
@@ -320,6 +348,65 @@ def table_llm(summary):
                  "folds for which the configuration had the highest validation macro-F1."])
 
 
+def label_metrics(summary):
+    """Per-label precision/recall/F1/accuracy (+ ROC-AUC/AP for score systems), mean and SD over the 5 test
+    folds. Classical and LLM: computed per fold from the OOF files; transformers: per_fold.csv averaged over
+    seeds within each fold (the T3 convention). F1 and AUC means are checked against summary.csv."""
+    from sklearn.metrics import average_precision_score, roc_auc_score
+    metrics = ["precision", "recall", "f1", "accuracy", "roc_auc", "avg_precision"]
+    tr = pd.read_csv("results/transformers/per_fold.csv")
+    rows = []
+    for k, _, has_scores in METRIC_SYSTEMS:
+        if k in METRIC_OOF:
+            o = pd.read_csv(METRIC_OOF[k])
+            per_fold = []
+            for fold, d in o.groupby("fold"):
+                r = evaluate(d[LABELS].to_numpy(), d[PRED].to_numpy())
+                for lab in LABELS:
+                    y = d[lab].to_numpy()
+                    r[f"{lab}_roc_auc"] = roc_auc_score(y, d[f"score_{lab}"]) if has_scores else np.nan
+                    r[f"{lab}_avg_precision"] = average_precision_score(y, d[f"score_{lab}"]) if has_scores else np.nan
+                per_fold.append(r)
+            per_fold = pd.DataFrame(per_fold)
+        else:
+            per_fold = tr[tr.system == k].groupby("fold").mean(numeric_only=True)
+            assert len(per_fold) == 5 and (tr[tr.system == k].groupby("fold").size() == len(SEEDS)).all(), k
+        assert len(per_fold) == 5, k
+        for lab in LABELS:
+            row = {"system": k, "label": lab}
+            for m in metrics:
+                col = per_fold[f"{lab}_{m}"]
+                row[f"{m}_mean"], row[f"{m}_sd"] = col.mean(), col.std(ddof=1)
+            assert abs(row["f1_mean"] - summary.loc[k, f"{lab}_f1_mean"]) < 1e-9, (k, lab)
+            auc_col = f"{lab}_roc_auc_mean"
+            if auc_col in summary.columns and not pd.isna(summary.loc[k, auc_col]):
+                assert abs(row["roc_auc_mean"] - summary.loc[k, auc_col]) < 1e-9, (k, lab)
+                assert abs(row["avg_precision_mean"] - summary.loc[k, f"{lab}_avg_precision_mean"]) < 1e-9, (k, lab)
+            rows.append(row)
+    out = pd.DataFrame(rows)
+    out.to_csv(f"{OUT}/label_metrics.csv", index=False)
+    return out
+
+
+def table_label_metrics(lm):
+    disp = {k: d for k, d, _ in METRIC_SYSTEMS}
+    rows = []
+    for i, (k, _, _) in enumerate(METRIC_SYSTEMS):
+        if i in (1, 4, 6):
+            rows.append(None)
+        for j, lab in enumerate(LABELS):
+            r = lm[(lm.system == k) & (lm.label == lab)].iloc[0]
+            rows.append([disp[k] if j == 0 else "", lab.capitalize()]
+                        + [f3(r[f"{m}_mean"]) for m in ("precision", "recall", "f1", "accuracy", "roc_auc",
+                                                         "avg_precision")])
+    latex_table(f"{TABLES}/T7_label_metrics.tex", "Per-label metrics.", "tab:labelmetrics",
+                ["System", "Label", "Precision", "Recall", "F1", "Accuracy", "ROC-AUC", "AP"], rows, "llrrrrrr",
+                ["Mean over the 5 test folds (transformers: fold metrics averaged over 5 seeds). ROC-AUC and "
+                 "average precision (AP) need continuous scores: -- for the all-positive reference and for the "
+                 "binary LLM configurations, which return only 0/1 labels. Classical models rank by "
+                 "probability (LR) or decision value (SVM); LLM score configurations by the returned score."])
+
+
 # --------------------------------------------------------------------- figures
 def style():
     plt.rcParams.update({"font.family": "sans-serif", "font.size": 9, "axes.edgecolor": INK_2,
@@ -349,9 +436,9 @@ def figure_bootstrap(boot):
     fig.savefig(f"{FIGURES}/F1_bootstrap.pdf", bbox_inches="tight")
     plt.close(fig)
     with open(f"{TABLES}/F1_note.tex", "w", encoding="utf-8") as f:   # sentence for the F1 caption
-        f.write("% \\label{fig:bootstrap}\nDifferences use pooled out-of-fold predictions (transformers: "
-                "seed-averaged scores), so point estimates differ from the means over folds in "
-                "Table~\\ref{tab:main}.\n")
+        f.write("% \\label{fig:bootstrap}\nDifferences use pooled out-of-fold predictions, the same thread "
+                "resamples for every system and, for transformers, the mean of the macro-F1 of the 5 seed runs, "
+                "so point estimates differ from the means over folds in Table~\\ref{tab:main}.\n")
 
 
 def figure_confusion(conf):
@@ -391,9 +478,11 @@ def main():
     boot["foldmean_macro_f1_b"] = boot.system_b.map(fold_mean)
     boot["foldmean_macro_f1_a"] = boot.system_a.map(fold_mean)
     boot.to_csv(f"{OUT}/bootstrap.csv", index=False)
-    conf = confusion(gold, preds)
+    conf = confusion(gold)
     conf.to_csv(f"{OUT}/confusion.csv", index=False)
     errors = export_errors(df, gold)
+    lm = label_metrics(summary)
+    table_label_metrics(lm)
 
     table_dataset(df)
     table_annotation()
@@ -404,7 +493,9 @@ def main():
     figure_bootstrap(boot)
     figure_confusion(conf)
 
-    inputs = [DATA, REPORT, AGREEMENT, "results/llm/config_selection.csv"] + list(OOF.values()) + SUMMARIES
+    inputs = ([DATA, REPORT, AGREEMENT, "results/llm/config_selection.csv", "results/transformers/per_fold.csv"]
+              + sorted({p for v in OOF.values() for p in v} | set(SINGLE_OOF.values()) | set(METRIC_OOF.values()))
+              + SUMMARIES)
     with open(f"{OUT}/run_info.json", "w") as f:
         json.dump({"seed": SEED, "n_resamples": N_BOOT, "ci_level": CI, "resampling_unit": "thread_id",
                    "n_threads": int(boot.n_threads.iloc[0]), "errors_exported": errors,
@@ -415,7 +506,7 @@ def main():
     print(boot[["contrast", "type", "macro_f1_b", "macro_f1_a", "diff", "ci_low", "ci_high",
                 "share_diff_le_0"]].round(3).to_string(index=False))
     print("\nerrors exported (private):", errors)
-    print(f"\nWrote {OUT}/, {TABLES}/ (T1-T6), {FIGURES}/ (F1, F2), {ERRORS}/")
+    print(f"\nWrote {OUT}/, {TABLES}/ (T1-T7), {FIGURES}/ (F1, F2), {ERRORS}/")
 
 
 if __name__ == "__main__":
