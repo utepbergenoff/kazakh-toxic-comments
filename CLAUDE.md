@@ -10,9 +10,9 @@ The deadline is tight. Prefer working, simple code over completeness. Ask before
 ## Hard rules
 
 1. **No invented numbers.** Every value in a table or figure must come from a script output in
-   `results/`. The assignment gives 0 points for unlabeled fabricated results. Cohen's κ was NOT
-   measured (labels were assigned by consensus); in the paper it appears only as
-   "expected ≥ 0.60 / TBD" unless a real second annotation is done (see Open items).
+   `results/`. The assignment gives 0 points for unlabeled fabricated results. Cohen's κ is measured
+   ONLY on the 50-comment pilot, which both annotators labeled independently
+   (`results/annotation/agreement.csv`); the 600 main comments were labeled by consensus.
 2. **Report negative results.** Classical models do not beat the all-positive reference; keep that
    reference row in every main table.
 3. **The paper text is written by the students, not by AI.** Code may generate LaTeX *tables* and
@@ -26,6 +26,41 @@ The deadline is tight. Prefer working, simple code over completeness. Ask before
 5. Platform is **Windows** (files may have CRLF line endings). Run everything with the venv one level up
    (`..\.venv`, Python 3.12, torch 2.14.1+cu130); the system Python has no pandas. Heavy models run
    **locally on an RTX 3070 Ti (8 GB)**, not Colab.
+
+## ⚠ v2 update (2026-10-25 evening) — read first, it overrides older numbers below
+
+The team finished labeling **all 600 main comments** (consensus, tab `Main`) and **double-labeled the
+50-comment pilot independently** (tabs `Yerlan` and `Tomiris`) in `data/04_annotation/labels.xlsx`.
+
+Already redone (by the chat session):
+- `src/agreement.py` → `results/annotation/agreement.csv` (pilot, original labels, both annotators kept
+  the comment): exclude decision κ 0.567 (n 50); language κ 0.926 (n 42); toxic κ 0.726 (n 41);
+  offensive κ 0.555 (n 41); hate κ undefined (0 positives from either annotator). P-011, P-027 incomplete.
+- `src/build_dataset.py` → **554 usable comments**, new folds (~111 per fold). Of 600: 554 used,
+  25 UNCLEAR, 10 incomplete → UNCLEAR, 9 not KK/RU, 2 not annotated. offensive/hate ⇒ toxic changed 52.
+  | | n | toxic | offensive | hate |
+  |---|---|---|---|---|
+  | KK | 225 | 74 | 48 | 8 |
+  | RU | 230 | 88 | 61 | 12 |
+  | CS | 99 | 34 | 20 | 2 |
+  | All | 554 | 196 | 129 | 22 |
+- `src/train_classical.py --e3` → `results/classical/` (v2): All-positive 0.325 ± 0.009;
+  LR-TFIDF 0.329 ± 0.046; SVM-TFIDF 0.318 ± 0.038; LR-Count 0.310 ± 0.031; n-gram (2,2)/(2,3)
+  0.321–0.323; cased LR 0.299, SVM 0.300.
+
+**STALE — must be rerun on the v2 folds, in this order** (delete the old outputs first so nothing
+stale survives; clear `results/transformers/runs/` because cached runs belong to the old folds):
+1. `notebooks/transformers.ipynb` — XLM-R, mBERT, mBERT-lower × 5 seeds × 5 folds (~2× the old runtime).
+2. `python src/llm.py` — the response cache covers the 285 old comments; ~270 new comments need calls
+   (roughly another $0.6). 6-shot demonstrations must be re-drawn from the new training folds.
+3. `python src/analysis.py` — **T2 must be rebuilt from `results/annotation/agreement.csv`** (measured
+   pilot κ, n per item, hate undefined) instead of "expected ≥ 0.60 (not measured)"; T1/T2 counts from
+   the v2 `dataset_report.md`; add to the F1 caption and T3 footnote that bootstrap differences use
+   pooled out-of-fold predictions while table values are means over folds.
+4. Update the results sections of this file with the v2 numbers and remove the v1 ones.
+
+Deviation list changes: 554 usable (not 285); pilot 50 (planned 150) double-labeled once, κ from the
+pilot only; main set by consensus; rule changed 52 labels (not 29).
 
 ## Pipeline status
 

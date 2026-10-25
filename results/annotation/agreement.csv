@@ -1,0 +1,6 @@
+item,n,observed_agreement,kappa,positives_Yerlan,positives_Tomiris,note
+exclude decision,50,0.92,0.5670995670995671,5.0,5.0,
+lang,42,0.9523809523809523,0.925531914893617,,,
+toxic,41,0.926829268292683,0.7260579064587973,6.0,7.0,
+offensive,41,0.8780487804878049,0.5553145336225596,4.0,9.0,
+hate,41,1.0,,0.0,0.0,undefined: no positive labels from either annotator

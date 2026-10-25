@@ -4,8 +4,8 @@
   "numpy": "2.5.3",
   "pandas": "3.0.5",
   "seed": 42,
-  "n_comments": 285,
+  "n_comments": 554,
   "folds": 5,
-  "runtime_s": 6.8,
+  "runtime_s": 5.6,
   "protocol": "5-fold grouped CV; validation = next fold; threshold frozen before test"
 }
