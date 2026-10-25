@@ -1,0 +1,75 @@
+{
+  "model_requested": "gpt-4.1-mini-2025-04-14",
+  "models_returned": [
+    "gpt-4.1-mini-2025-04-14"
+  ],
+  "system_fingerprints": [
+    "fp_07e815c12d",
+    "fp_1e8a793b2d",
+    "fp_2738b29278",
+    "fp_295d13ce69",
+    "fp_38aba161ba",
+    "fp_3c963e5fcf",
+    "fp_3f810e81ea",
+    "fp_4b4457b5e2",
+    "fp_4b598befc4",
+    "fp_4ffa17cc03",
+    "fp_58b0258a33",
+    "fp_59a3828018",
+    "fp_5fa2d5cae1",
+    "fp_678b85ce7d",
+    "fp_6cab07b253",
+    "fp_6d6e47cc7e",
+    "fp_70a2959726",
+    "fp_802f1283f8",
+    "fp_89baadaeb8",
+    "fp_8c75033c9a",
+    "fp_96f94d62d4",
+    "fp_98a8cc63cd",
+    "fp_c29994a85c",
+    "fp_d94716f877",
+    "fp_dbb0d26db2",
+    "fp_e822df0ea4",
+    "fp_f06ae1c48f",
+    "fp_f26cc340c5"
+  ],
+  "params": {
+    "temperature": 0,
+    "top_p": 1,
+    "max_completion_tokens": 128,
+    "seed": 42,
+    "response_format": {
+      "type": "json_object"
+    }
+  },
+  "first_response_utc": "2026-10-25T09:36:20+00:00",
+  "last_response_utc": "2026-10-25T09:39:22+00:00",
+  "this_run_started_utc": "2026-10-25T09:36:47+00:00",
+  "calls_needed": 1710,
+  "responses_used": 1710,
+  "retries": 0,
+  "fallbacks": 0,
+  "this_run": {
+    "api_calls": 1690,
+    "cache_hits": 20,
+    "input_tokens": 1365692,
+    "output_tokens": 37052
+  },
+  "total_tokens": {
+    "input": 1379760,
+    "output": 37481
+  },
+  "est_total_cost_usd": 0.6119,
+  "price_per_million_usd": {
+    "input": 0.4,
+    "output": 1.6
+  },
+  "openai_sdk": "3.37.0",
+  "python": "3.12.10",
+  "pandas": "3.0.6",
+  "numpy": "2.5.3",
+  "n_comments": 285,
+  "folds": 5,
+  "seed": 42,
+  "protocol": "5-fold grouped CV; validation = next fold; score thresholds frozen before test; demonstrations from training folds; LLM-best by validation macro-F1"
+}

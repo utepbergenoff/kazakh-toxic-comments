@@ -7,3 +7,5 @@ openpyxl>=3.1
 # notebooks/transformers.ipynb (torch is the CUDA build: torch==2.14.1+cu130 from the PyTorch index)
 transformers==5.20.2
 nbconvert>=7.17
+# src/llm.py
+openai==3.37.0

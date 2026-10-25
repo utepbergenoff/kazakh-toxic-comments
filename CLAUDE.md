@@ -38,7 +38,7 @@ The deadline is tight. Prefer working, simple code over completeness. Ask before
 | Classical baselines E1/E2/E3 | `src/train_classical.py --e3` | done | `results/classical/` |
 | Transformers (XLM-R, mBERT, E3 mBERT-lower) | `notebooks/transformers.ipynb` | done (75 runs, 12.9 min on RTX 3070 Ti) | `results/transformers/` |
 | LSTM, BERT+LSTM | — | **optional / likely skipped** (report as time deviation) | |
-| LLM (gpt-4.1-mini) | `src/llm.py` | **TODO, only if OpenAI credit** | `results/llm/` |
+| LLM (gpt-4.1-mini) | `src/llm.py` | done (1,710 calls, 0 fallbacks, $0.61) | `results/llm/`, private cache `data/06_llm/` |
 | Bootstrap, confusion matrices, figures, LaTeX tables | `src/analysis.py` | **TODO** | `results/figures/`, `results/tables/` |
 
 Shared config: `config.py` (paths, seed 42, sampling sizes). Shared metrics: `src/metrics.py`
@@ -86,6 +86,19 @@ Of the 600 sampled: 285 used, 292 not annotated (time), 10 excluded UNCLEAR, 8 i
 | XLM-R | 0.298 ± 0.031 | 0.023 | 0.260 | 0.361 | 0.290 |
 | mBERT (cased) | 0.338 ± 0.028 | 0.037 | 0.306 | 0.403 | 0.308 |
 | mBERT lower-cased (E3) | 0.331 ± 0.024 | 0.020 | 0.288 | 0.406 | 0.328 |
+| **LLM-best** (config chosen per fold on validation) | 0.509 ± 0.059 | — | 0.469 | 0.610 | 0.406 |
+| LLM zero-shot binary | 0.567 ± 0.099 | — | 0.462 | 0.638 | 0.598 |
+| LLM zero-shot score | 0.533 ± 0.087 | — | 0.479 | 0.589 | 0.451 |
+| LLM 6-shot binary | 0.547 ± 0.095 | — | 0.525 | 0.591 | 0.592 |
+| LLM 6-shot score | 0.498 ± 0.062 | — | 0.495 | 0.557 | 0.402 |
+
+LLM (`results/llm/summary.csv`): every config is far above all trained models and the reference.
+**`LLM-best` is the prespecified LLM system** (the bootstrap contrast "XLM-R vs best LLM config" must use
+`oof_LLM-best.csv`); validation picked score configs in 4 of 5 folds (`config_selection.csv`), which
+did worse on test than zero-shot binary. Do not swap in zero-shot binary because it scored best on test
+(that would be selection on test); report the four configs as the configuration comparison.
+Score configs mean ROC-AUC toxic/offensive/hate ≈ 0.86/0.88/0.60 (zero-shot). Binary configs predict
+positive at close to the true rates (toxic 0.37 vs 0.33). Hate F1 is still low (0.09–0.32).
 
 Transformers: mBERT is only +0.007 above the all-positive reference (within one SD; needs the
 bootstrap), XLM-R is below it. Mean ROC-AUC toxic/offensive/hate: XLM-R 0.52/0.57/0.56,
@@ -127,7 +140,17 @@ Implementation notes (`notebooks/transformers.ipynb`):
 - Headless: `..\.venv\Scripts\jupyter nbconvert --to notebook --execute --inplace
   --ExecutePreprocessor.timeout=-1 notebooks/transformers.ipynb`.
 
-## TODO 2 — LLM (`src/llm.py`), only if OpenAI credit exists
+## TODO 2 — LLM (`src/llm.py`) — done
+
+Implementation notes: Chat Completions with `response_format=json_object` and `seed=42` (in addition to
+temperature 0 / top_p 1 / 128 tokens); definitions copied verbatim from the `README` tab of
+`labels.xlsx`; templates in `results/llm/prompt_templates.md`; demo ids in `demonstrations.csv`.
+Zero-shot predictions are shared by all folds; 6-shot comments are labelled with the demos of the
+test fold they are validated/tested for. Prompts + raw responses (contain text) are cached in
+git-ignored `data/06_llm/responses.jsonl`; a re-run is fully cached. 28 different
+`system_fingerprint`s were returned → API outputs are not bit-reproducible, the cache is.
+
+Original spec:
 
 - Model `gpt-4.1-mini-2025-04-14` (if unavailable, nearest snapshot → report as deviation).
   Temperature 0, top_p 1, max 128 output tokens, one JSON object `{toxic, offensive, hate}`.
@@ -163,6 +186,10 @@ Implementation notes (`notebooks/transformers.ipynb`):
 - offensive/hate ⇒ toxic rule applied post hoc (29 labels).
 - 5-fold grouped CV instead of a single 60/20/20 split.
 - LSTM and BERT+LSTM not run (if skipped); E4 transfer not run (too few comments per condition).
+- LLM demonstrations re-drawn per test fold from its training folds (CV adaptation of "chosen once");
+  their order is shuffled with seed (42, fold). In fold 0 this order happens to be 3 negatives then
+  3 positives.
+- Transformers and LLM run locally (RTX 3070 Ti / OpenAI API, 2026-10-25) instead of Colab.
 
 ## Open items
 
