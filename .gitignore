@@ -10,3 +10,6 @@ __pycache__/
 data/_test_run/
 venv/
 .DS_Store
+check_api.py
+data/06_llm/
+.ruff_cache/

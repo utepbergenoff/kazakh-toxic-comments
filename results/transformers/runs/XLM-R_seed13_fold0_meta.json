@@ -1,0 +1,60 @@
+{
+ "system": "XLM-R",
+ "seed": 13,
+ "fold": 0,
+ "n_train": 171,
+ "n_val": 57,
+ "n_test": 57,
+ "best_epoch": 3,
+ "epochs_run": 5,
+ "best_val_loss": 0.5129112779048451,
+ "runtime_s": 7.8,
+ "peak_gpu_mem_gb": 5.48,
+ "history": [
+  {
+   "epoch": 1,
+   "train_loss": 0.6839678357219139,
+   "val_loss": 0.6675547103435673
+  },
+  {
+   "epoch": 2,
+   "train_loss": 0.5998449121069954,
+   "val_loss": 0.5799422347754762
+  },
+  {
+   "epoch": 3,
+   "train_loss": 0.5158435419986123,
+   "val_loss": 0.5129112779048451
+  },
+  {
+   "epoch": 4,
+   "train_loss": 0.46680505838078135,
+   "val_loss": 0.5158169283504375
+  },
+  {
+   "epoch": 5,
+   "train_loss": 0.47654999812908805,
+   "val_loss": 0.5357342658684268
+  }
+ ],
+ "choices": [
+  {
+   "label": "toxic",
+   "threshold": 0.30569732189178467,
+   "val_f1": 0.5205479452054794,
+   "note": ""
+  },
+  {
+   "label": "offensive",
+   "threshold": 0.20946967601776123,
+   "val_f1": 0.5454545454545454,
+   "note": ""
+  },
+  {
+   "label": "hate",
+   "threshold": 0.2613309323787689,
+   "val_f1": 0.2222222222222222,
+   "note": ""
+  }
+ ]
+}

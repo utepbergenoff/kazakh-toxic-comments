@@ -1,0 +1,60 @@
+{
+  "env": {
+    "python": "3.12.10",
+    "torch": "2.14.1+cu130",
+    "cuda": "13.0",
+    "cudnn": 92400,
+    "transformers": "5.20.2",
+    "tokenizers": "0.23.3",
+    "numpy": "2.5.3",
+    "pandas": "3.0.6",
+    "scikit_learn": "1.9.1",
+    "gpu": "NVIDIA GeForce RTX 3070 Ti",
+    "gpu_memory_gb": 8.0,
+    "nvidia_driver": "610.47",
+    "os": "Windows-11-10.0.26200-SP0"
+  },
+  "model_revisions": {
+    "FacebookAI/xlm-roberta-base": "e73636d4f797dec63c3081bb6ed5c7b0bb3f2089",
+    "google-bert/bert-base-multilingual-cased": "3f076fdb1ab68d5b2880cb87a0886f315b8146f8"
+  },
+  "smoke": false,
+  "seeds": [
+    13,
+    21,
+    42,
+    87,
+    100
+  ],
+  "folds": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "n_comments": 285,
+  "max_len": 128,
+  "lr": 2e-05,
+  "weight_decay": 0.01,
+  "weight_decay_excludes": "biases and LayerNorm weights (1-D parameters)",
+  "micro_batch": 16,
+  "grad_accum": 2,
+  "effective_batch": 32,
+  "warmup_share": 0.1,
+  "scheduler": "linear decay after warm-up",
+  "max_epochs": 10,
+  "early_stopping": "validation BCE, patience 2, best checkpoint restored",
+  "dropout_head": 0.1,
+  "precision": "bf16 autocast",
+  "optimizer": "torch AdamW",
+  "attention": "eager (deterministic)",
+  "pooling": {
+    "XLM-R": "first",
+    "mBERT": "pooler",
+    "mBERT-lower": "pooler"
+  },
+  "protocol": "5-fold grouped CV; validation = next fold; threshold frozen before test",
+  "total_train_runtime_s": 771.3,
+  "max_peak_gpu_mem_gb": 5.5
+}
