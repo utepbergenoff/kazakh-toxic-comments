@@ -4,10 +4,12 @@
     "gpt-4.1-mini-2025-04-14"
   ],
   "system_fingerprints": [
+    "fp_02efa0628f",
     "fp_07e815c12d",
     "fp_1e8a793b2d",
     "fp_2738b29278",
     "fp_295d13ce69",
+    "fp_315094e93b",
     "fp_38aba161ba",
     "fp_3c963e5fcf",
     "fp_3f810e81ea",
@@ -17,7 +19,9 @@
     "fp_58b0258a33",
     "fp_59a3828018",
     "fp_5fa2d5cae1",
+    "fp_600e26b6f7",
     "fp_678b85ce7d",
+    "fp_69782dd4d5",
     "fp_6cab07b253",
     "fp_6d6e47cc7e",
     "fp_70a2959726",
@@ -26,9 +30,14 @@
     "fp_8c75033c9a",
     "fp_96f94d62d4",
     "fp_98a8cc63cd",
+    "fp_9d881fade5",
+    "fp_a39d4f1b74",
+    "fp_a93940b23f",
+    "fp_b00c9abe04",
     "fp_c29994a85c",
     "fp_d94716f877",
     "fp_dbb0d26db2",
+    "fp_e7fa681843",
     "fp_e822df0ea4",
     "fp_f06ae1c48f",
     "fp_f26cc340c5"
@@ -43,23 +52,23 @@
     }
   },
   "first_response_utc": "2026-10-25T09:36:20+00:00",
-  "last_response_utc": "2026-10-25T09:39:22+00:00",
-  "this_run_started_utc": "2026-10-25T09:36:47+00:00",
-  "calls_needed": 1710,
-  "responses_used": 1710,
+  "last_response_utc": "2026-10-25T14:17:49+00:00",
+  "this_run_started_utc": "2026-10-25T14:13:22+00:00",
+  "calls_needed": 3324,
+  "responses_used": 3324,
   "retries": 0,
   "fallbacks": 0,
   "this_run": {
-    "api_calls": 1690,
-    "cache_hits": 20,
-    "input_tokens": 1365692,
-    "output_tokens": 37052
+    "api_calls": 2754,
+    "cache_hits": 570,
+    "input_tokens": 2564298,
+    "output_tokens": 61636
   },
   "total_tokens": {
-    "input": 1379760,
-    "output": 37481
+    "input": 2824034,
+    "output": 72897
   },
-  "est_total_cost_usd": 0.6119,
+  "est_total_cost_usd": 1.2462,
   "price_per_million_usd": {
     "input": 0.4,
     "output": 1.6
@@ -68,7 +77,7 @@
   "python": "3.12.10",
   "pandas": "3.0.6",
   "numpy": "2.5.3",
-  "n_comments": 285,
+  "n_comments": 554,
   "folds": 5,
   "seed": 42,
   "protocol": "5-fold grouped CV; validation = next fold; score thresholds frozen before test; demonstrations from training folds; LLM-best by validation macro-F1"

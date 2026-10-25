@@ -2,68 +2,58 @@
  "system": "XLM-R",
  "seed": 100,
  "fold": 0,
- "n_train": 171,
- "n_val": 57,
- "n_test": 57,
- "best_epoch": 5,
- "epochs_run": 7,
- "best_val_loss": 0.505636683681555,
- "runtime_s": 9.6,
- "peak_gpu_mem_gb": 5.5,
+ "n_train": 331,
+ "n_val": 112,
+ "n_test": 111,
+ "best_epoch": 3,
+ "epochs_run": 5,
+ "best_val_loss": 0.4506440503256662,
+ "runtime_s": 11.7,
+ "peak_gpu_mem_gb": 5.49,
  "history": [
   {
    "epoch": 1,
-   "train_loss": 0.6505549730148464,
-   "val_loss": 0.6085453200758549
+   "train_loss": 0.634690485451997,
+   "val_loss": 0.5084527730941772
   },
   {
    "epoch": 2,
-   "train_loss": 0.5523291210449695,
-   "val_loss": 0.5344183960853265
+   "train_loss": 0.49800503434011223,
+   "val_loss": 0.4586952186766125
   },
   {
    "epoch": 3,
-   "train_loss": 0.4890769527204785,
-   "val_loss": 0.5118143516674376
+   "train_loss": 0.46386646336058956,
+   "val_loss": 0.4506440503256662
   },
   {
    "epoch": 4,
-   "train_loss": 0.49826084382352775,
-   "val_loss": 0.5137366523519594
+   "train_loss": 0.4562499669623399,
+   "val_loss": 0.46867224999836515
   },
   {
    "epoch": 5,
-   "train_loss": 0.48669613918133414,
-   "val_loss": 0.505636683681555
-  },
-  {
-   "epoch": 6,
-   "train_loss": 0.46479820600959526,
-   "val_loss": 0.5182303991931224
-  },
-  {
-   "epoch": 7,
-   "train_loss": 0.4475076463487413,
-   "val_loss": 0.5127832736188208
+   "train_loss": 0.4465119380124986,
+   "val_loss": 0.4578037630944025
   }
  ],
  "choices": [
   {
    "label": "toxic",
-   "threshold": 0.3442229926586151,
-   "val_f1": 0.6341463414634146,
+   "threshold": 0.35220175981521606,
+   "val_f1": 0.5736434108527132,
    "note": ""
   },
   {
    "label": "offensive",
-   "threshold": 0.1919327825307846,
-   "val_f1": 0.5294117647058824,
+   "threshold": 0.22270013391971588,
+   "val_f1": 0.4642857142857143,
    "note": ""
   },
   {
    "label": "hate",
-   "threshold": 0.060086652636528015,
-   "val_f1": 0.32,
+   "threshold": 0.0384661927819252,
+   "val_f1": 0.18181818181818182,
    "note": ""
   }
  ]

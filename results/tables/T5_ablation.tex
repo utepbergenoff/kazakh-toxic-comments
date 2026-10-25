@@ -6,18 +6,18 @@
 \toprule
 Model & Variant & Macro-F1 & KK & RU & CS \\
 \midrule
-LR & TF-IDF word (1,2), lower-cased & 0.319 $\pm$ 0.083 & 0.233 & 0.394 & 0.315 \\
-LR & TF-IDF word (2,2) & 0.327 $\pm$ 0.014 & 0.285 & 0.363 & 0.346 \\
-LR & TF-IDF word (2,3) & 0.327 $\pm$ 0.014 & 0.284 & 0.363 & 0.346 \\
-LR & TF-IDF word (1,2), cased & 0.296 $\pm$ 0.068 & 0.187 & 0.393 & 0.322 \\
+LR & TF-IDF word (1,2), lower-cased & 0.329 $\pm$ 0.046 & 0.344 & 0.354 & 0.311 \\
+LR & TF-IDF word (2,2) & 0.321 $\pm$ 0.011 & 0.302 & 0.355 & 0.290 \\
+LR & TF-IDF word (2,3) & 0.322 $\pm$ 0.010 & 0.302 & 0.357 & 0.290 \\
+LR & TF-IDF word (1,2), cased & 0.299 $\pm$ 0.030 & 0.319 & 0.334 & 0.298 \\
 \midrule
-SVM & TF-IDF word (1,2), lower-cased & 0.286 $\pm$ 0.056 & 0.229 & 0.348 & 0.305 \\
-SVM & TF-IDF word (2,2) & 0.327 $\pm$ 0.014 & 0.284 & 0.363 & 0.346 \\
-SVM & TF-IDF word (2,3) & 0.327 $\pm$ 0.014 & 0.284 & 0.363 & 0.346 \\
-SVM & TF-IDF word (1,2), cased & 0.266 $\pm$ 0.049 & 0.216 & 0.311 & 0.346 \\
+SVM & TF-IDF word (1,2), lower-cased & 0.318 $\pm$ 0.038 & 0.327 & 0.358 & 0.281 \\
+SVM & TF-IDF word (2,2) & 0.323 $\pm$ 0.010 & 0.302 & 0.359 & 0.291 \\
+SVM & TF-IDF word (2,3) & 0.322 $\pm$ 0.010 & 0.302 & 0.358 & 0.291 \\
+SVM & TF-IDF word (1,2), cased & 0.300 $\pm$ 0.023 & 0.328 & 0.337 & 0.280 \\
 \midrule
-mBERT & cased input (default) & 0.338 $\pm$ 0.028 & 0.306 & 0.403 & 0.308 \\
-mBERT & lower-cased input & 0.331 $\pm$ 0.024 & 0.288 & 0.406 & 0.328 \\
+mBERT & cased input (default) & 0.340 $\pm$ 0.043 & 0.363 & 0.380 & 0.291 \\
+mBERT & lower-cased input & 0.344 $\pm$ 0.047 & 0.377 & 0.366 & 0.306 \\
 \bottomrule
 \end{tabular}
 \par\smallskip\footnotesize Macro-F1 mean $\pm$ SD over the 5 test folds; per-language values on pooled out-of-fold predictions.

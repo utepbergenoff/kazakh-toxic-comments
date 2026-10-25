@@ -2,73 +2,68 @@
  "system": "mBERT",
  "seed": 100,
  "fold": 4,
- "n_train": 171,
- "n_val": 57,
- "n_test": 57,
- "best_epoch": 6,
- "epochs_run": 8,
- "best_val_loss": 0.4522720582303945,
- "runtime_s": 9.1,
+ "n_train": 333,
+ "n_val": 111,
+ "n_test": 110,
+ "best_epoch": 5,
+ "epochs_run": 7,
+ "best_val_loss": 0.45031817324526674,
+ "runtime_s": 14.0,
  "peak_gpu_mem_gb": 4.0,
  "history": [
   {
    "epoch": 1,
-   "train_loss": 0.6670953888177407,
-   "val_loss": 0.6033572704471343
+   "train_loss": 0.6408468118539682,
+   "val_loss": 0.5408306121826172
   },
   {
    "epoch": 2,
-   "train_loss": 0.5528344234295524,
-   "val_loss": 0.5002848753455089
+   "train_loss": 0.4913008272707522,
+   "val_loss": 0.4665398984342008
   },
   {
    "epoch": 3,
-   "train_loss": 0.48539807131880675,
-   "val_loss": 0.47355091362668755
+   "train_loss": 0.45165718162620627,
+   "val_loss": 0.4624969780266106
   },
   {
    "epoch": 4,
-   "train_loss": 0.46961053956089427,
-   "val_loss": 0.4714065350984272
+   "train_loss": 0.43408196251671594,
+   "val_loss": 0.45141269924404387
   },
   {
    "epoch": 5,
-   "train_loss": 0.4515993664836326,
-   "val_loss": 0.4571360984043768
+   "train_loss": 0.4160354574163397,
+   "val_loss": 0.45031817324526674
   },
   {
    "epoch": 6,
-   "train_loss": 0.43110861415751495,
-   "val_loss": 0.4522720582303945
+   "train_loss": 0.3769947926442067,
+   "val_loss": 0.4921852833515889
   },
   {
    "epoch": 7,
-   "train_loss": 0.393856570966992,
-   "val_loss": 0.4555197598641379
-  },
-  {
-   "epoch": 8,
-   "train_loss": 0.3632033786810862,
-   "val_loss": 0.45585647382234273
+   "train_loss": 0.343773145933409,
+   "val_loss": 0.47887452157052074
   }
  ],
  "choices": [
   {
    "label": "toxic",
-   "threshold": 0.24944725632667542,
-   "val_f1": 0.6,
+   "threshold": 0.26740819215774536,
+   "val_f1": 0.559322033898305,
    "note": ""
   },
   {
    "label": "offensive",
-   "threshold": 0.1980641782283783,
-   "val_f1": 0.48,
+   "threshold": 0.16451646387577057,
+   "val_f1": 0.4835164835164835,
    "note": ""
   },
   {
    "label": "hate",
-   "threshold": 0.13660839200019836,
-   "val_f1": 0.4,
+   "threshold": 0.0838903859257698,
+   "val_f1": 0.23076923076923078,
    "note": ""
   }
  ]

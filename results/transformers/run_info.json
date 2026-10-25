@@ -33,7 +33,7 @@
     3,
     4
   ],
-  "n_comments": 285,
+  "n_comments": 554,
   "max_len": 128,
   "lr": 2e-05,
   "weight_decay": 0.01,
@@ -55,6 +55,6 @@
     "mBERT-lower": "pooler"
   },
   "protocol": "5-fold grouped CV; validation = next fold; threshold frozen before test",
-  "total_train_runtime_s": 771.3,
+  "total_train_runtime_s": 1205.1,
   "max_peak_gpu_mem_gb": 5.5
 }

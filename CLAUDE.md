@@ -27,40 +27,13 @@ The deadline is tight. Prefer working, simple code over completeness. Ask before
    (`..\.venv`, Python 3.12, torch 2.14.1+cu130); the system Python has no pandas. Heavy models run
    **locally on an RTX 3070 Ti (8 GB)**, not Colab.
 
-## ⚠ v2 update (2026-10-25 evening) — read first, it overrides older numbers below
+## Data versions
 
-The team finished labeling **all 600 main comments** (consensus, tab `Main`) and **double-labeled the
-50-comment pilot independently** (tabs `Yerlan` and `Tomiris`) in `data/04_annotation/labels.xlsx`.
-
-Already redone (by the chat session):
-- `src/agreement.py` → `results/annotation/agreement.csv` (pilot, original labels, both annotators kept
-  the comment): exclude decision κ 0.567 (n 50); language κ 0.926 (n 42); toxic κ 0.726 (n 41);
-  offensive κ 0.555 (n 41); hate κ undefined (0 positives from either annotator). P-011, P-027 incomplete.
-- `src/build_dataset.py` → **554 usable comments**, new folds (~111 per fold). Of 600: 554 used,
-  25 UNCLEAR, 10 incomplete → UNCLEAR, 9 not KK/RU, 2 not annotated. offensive/hate ⇒ toxic changed 52.
-  | | n | toxic | offensive | hate |
-  |---|---|---|---|---|
-  | KK | 225 | 74 | 48 | 8 |
-  | RU | 230 | 88 | 61 | 12 |
-  | CS | 99 | 34 | 20 | 2 |
-  | All | 554 | 196 | 129 | 22 |
-- `src/train_classical.py --e3` → `results/classical/` (v2): All-positive 0.325 ± 0.009;
-  LR-TFIDF 0.329 ± 0.046; SVM-TFIDF 0.318 ± 0.038; LR-Count 0.310 ± 0.031; n-gram (2,2)/(2,3)
-  0.321–0.323; cased LR 0.299, SVM 0.300.
-
-**STALE — must be rerun on the v2 folds, in this order** (delete the old outputs first so nothing
-stale survives; clear `results/transformers/runs/` because cached runs belong to the old folds):
-1. `notebooks/transformers.ipynb` — XLM-R, mBERT, mBERT-lower × 5 seeds × 5 folds (~2× the old runtime).
-2. `python src/llm.py` — the response cache covers the 285 old comments; ~270 new comments need calls
-   (roughly another $0.6). 6-shot demonstrations must be re-drawn from the new training folds.
-3. `python src/analysis.py` — **T2 must be rebuilt from `results/annotation/agreement.csv`** (measured
-   pilot κ, n per item, hate undefined) instead of "expected ≥ 0.60 (not measured)"; T1/T2 counts from
-   the v2 `dataset_report.md`; add to the F1 caption and T3 footnote that bootstrap differences use
-   pooled out-of-fold predictions while table values are means over folds.
-4. Update the results sections of this file with the v2 numbers and remove the v1 ones.
-
-Deviation list changes: 554 usable (not 285); pilot 50 (planned 150) double-labeled once, κ from the
-pilot only; main set by consensus; rule changed 52 labels (not 29).
+- **v2 (current, `main`)**: all 600 main comments labelled by consensus (tab `Main`), 50-comment pilot
+  labelled independently by both annotators (tabs `Yerlan`, `Tomiris`) in `data/04_annotation/labels.xlsx`.
+  Everything below is v2 (rerun 2026-10-25).
+- **v1 (branch `v1-285`)**: the earlier 285-comment study (consensus only, κ not measured), kept for the
+  research history. Do not mix v1 numbers into the paper.
 
 ## Pipeline status
 
@@ -68,31 +41,40 @@ pilot only; main set by consensus; rule changed 52 labels (not 29).
 |---|---|---|---|
 | Collect comments (YouTube Data API v3) | `src/collect.py` | done | `data/01_raw/` (4,926 comments, 5 channels, 40 videos, 103 quota units) |
 | Clean, language guess, sample | `src/sample.py` | done | `data/02_pool/`, `data/03_sample/` (600 main + 50 pilot sampled) |
-| Annotation | Google Sheets | done (consensus) | `data/04_annotation/labels.xlsx` (tab `Main`) |
+| Annotation | Google Sheets | done (main: consensus; pilot: independent double) | `data/04_annotation/labels.xlsx` |
+| Pilot agreement (Cohen's κ) | `src/agreement.py` | done | `results/annotation/agreement.csv` |
 | Final dataset + folds | `src/build_dataset.py` | done | `data/05_final/final_dataset.csv`, `folds.csv`, `dataset_report.md` |
 | Classical baselines E1/E2/E3 | `src/train_classical.py --e3` | done | `results/classical/` |
-| Transformers (XLM-R, mBERT, E3 mBERT-lower) | `notebooks/transformers.ipynb` | done (75 runs, 12.9 min on RTX 3070 Ti) | `results/transformers/` |
+| Transformers (XLM-R, mBERT, E3 mBERT-lower) | `notebooks/transformers.ipynb` | done (75 runs, 20.8 min wall / 1,205 s training on RTX 3070 Ti) | `results/transformers/` |
 | LSTM, BERT+LSTM | — | **optional / likely skipped** (report as time deviation) | |
-| LLM (gpt-4.1-mini) | `src/llm.py` | done (1,710 calls, 0 fallbacks, $0.61) | `results/llm/`, private cache `data/06_llm/` |
-| Bootstrap, confusion matrices, figures, LaTeX tables | `src/analysis.py` | done | `results/analysis/`, `results/tables/` (T1–T6), `results/figures/` (F1, F2), private `data/07_errors/` |
+| LLM (gpt-4.1-mini) | `src/llm.py` | done (3,324 responses, 0 retries, 0 fallbacks, ≈ $1.25 total) | `results/llm/`, private cache `data/06_llm/` |
+| Bootstrap, confusion matrices, figures, LaTeX tables | `src/analysis.py` | done | `results/analysis/`, `results/tables/` (T1–T6, `F1_note.tex`), `results/figures/` (F1, F2), private `data/07_errors/` |
 
 Shared config: `config.py` (paths, seed 42, sampling sizes). Shared metrics: `src/metrics.py`
 (`evaluate`, `best_threshold`, `by_language`) — **reuse it for every model** so numbers are comparable.
 
+## Annotation agreement (`results/annotation/agreement.csv`)
+
+Pilot only (original labels; label items over the comments both annotators kept): exclude decision
+κ 0.567 (n 50); language κ 0.926 (n 42); toxic κ 0.726 (n 41); offensive κ 0.555 (n 41); hate κ
+undefined (0 positives from either annotator). P-011, P-027 incomplete. T2 shows these values.
+
 ## Final dataset (`data/05_final/final_dataset.csv`)
 
-285 usable comments. Columns: `id, text, lang (KK/RU/CS), toxic, offensive, hate, toxic_original, note,`
-sampling metadata (`route, lang_guess, thread_id, video_id, channel_id, ...`) and `fold` (0–4).
+554 usable comments (~111 per fold). Columns: `id, text, lang (KK/RU/CS), toxic, offensive, hate,
+toxic_original, note,` sampling metadata (`route, lang_guess, thread_id, video_id, channel_id, ...`) and
+`fold` (0–4).
 
 | | n | toxic | offensive | hate |
 |---|---|---|---|---|
-| KK | 124 | 33 | 23 | 5 |
-| RU | 117 | 43 | 34 | 11 |
-| CS | 44 | 18 | 10 | 2 |
-| All | 285 | 94 | 67 | 18 |
+| KK | 225 | 74 | 48 | 8 |
+| RU | 230 | 88 | 61 | 12 |
+| CS | 99 | 34 | 20 | 2 |
+| All | 554 | 196 | 129 | 22 |
 
-Of the 600 sampled: 285 used, 292 not annotated (time), 10 excluded UNCLEAR, 8 incomplete → UNCLEAR,
-5 not KK/RU. Rule applied: offensive=1 or hate=1 ⇒ toxic=1 (29 labels changed; original in `toxic_original`).
+Of the 600 sampled: 554 used, 25 excluded UNCLEAR, 10 incomplete → UNCLEAR, 9 not KK/RU, 2 not
+annotated. Rule applied: offensive=1 or hate=1 ⇒ toxic=1 (52 labels changed; original in
+`toxic_original`). Hate per fold: 6/6/2/7/1 (fold 4 has one hate comment).
 
 ## Evaluation protocol (pilot adaptation of the Methods — keep identical across models)
 
@@ -110,60 +92,65 @@ Of the 600 sampled: 285 used, 292 not annotated (time), 10 excluded UNCLEAR, 8 i
 - Save **out-of-fold predictions** per system as `oof_<system>.csv` with columns
   `id, lang, fold, toxic, offensive, hate, pred_*, score_*` — the bootstrap script needs them.
 
-## Current results (`results/classical/summary.csv`, `results/transformers/summary.csv`)
+## Current results (v2; `results/{classical,transformers,llm}/summary.csv`)
 
 | System | Macro-F1 (mean ± SD over folds) | SD over seeds | KK | RU | CS |
 |---|---|---|---|---|---|
-| All-positive reference | 0.331 ± 0.020 | — | 0.270 | 0.387 | 0.346 |
-| LR-TFIDF (1,2) | 0.319 ± 0.083 | — | 0.233 | 0.394 | 0.315 |
-| SVM-TFIDF (1,2) | 0.286 ± 0.056 | — | 0.229 | 0.348 | 0.305 |
-| LR-Count (1,2) | 0.273 ± 0.093 | — | 0.251 | 0.336 | 0.343 |
-| XLM-R | 0.298 ± 0.031 | 0.023 | 0.260 | 0.361 | 0.290 |
-| mBERT (cased) | 0.338 ± 0.028 | 0.037 | 0.306 | 0.403 | 0.308 |
-| mBERT lower-cased (E3) | 0.331 ± 0.024 | 0.020 | 0.288 | 0.406 | 0.328 |
-| **LLM-best** (config chosen per fold on validation) | 0.509 ± 0.059 | — | 0.469 | 0.610 | 0.406 |
-| LLM zero-shot binary | 0.567 ± 0.099 | — | 0.462 | 0.638 | 0.598 |
-| LLM zero-shot score | 0.533 ± 0.087 | — | 0.479 | 0.589 | 0.451 |
-| LLM 6-shot binary | 0.547 ± 0.095 | — | 0.525 | 0.591 | 0.592 |
-| LLM 6-shot score | 0.498 ± 0.062 | — | 0.495 | 0.557 | 0.402 |
+| All-positive reference | 0.325 ± 0.009 | — | 0.305 | 0.357 | 0.296 |
+| LR-TFIDF (1,2) | 0.329 ± 0.046 | — | 0.344 | 0.354 | 0.311 |
+| SVM-TFIDF (1,2) | 0.318 ± 0.038 | — | 0.327 | 0.358 | 0.281 |
+| LR-Count (1,2) | 0.310 ± 0.031 | — | 0.343 | 0.327 | 0.282 |
+| XLM-R | 0.350 ± 0.019 | 0.019 | 0.369 | 0.381 | 0.303 |
+| mBERT (cased) | 0.340 ± 0.043 | 0.010 | 0.363 | 0.380 | 0.291 |
+| mBERT lower-cased (E3) | 0.344 ± 0.047 | 0.009 | 0.377 | 0.366 | 0.306 |
+| **LLM-best** (config chosen per fold on validation) | 0.575 ± 0.104 | — | 0.525 | 0.531 | 0.477 |
+| LLM zero-shot binary | 0.580 ± 0.097 | — | 0.602 | 0.571 | 0.621 |
+| LLM zero-shot score | 0.497 ± 0.063 | — | 0.511 | 0.491 | 0.436 |
+| LLM 6-shot binary | 0.581 ± 0.088 | — | 0.564 | 0.608 | 0.655 |
+| LLM 6-shot score | 0.582 ± 0.096 | — | 0.538 | 0.532 | 0.493 |
 
-LLM (`results/llm/summary.csv`): every config is far above all trained models and the reference.
-**`LLM-best` is the prespecified LLM system** (the bootstrap contrast "XLM-R vs best LLM config" must use
-`oof_LLM-best.csv`); validation picked score configs in 4 of 5 folds (`config_selection.csv`), which
-did worse on test than zero-shot binary. Do not swap in zero-shot binary because it scored best on test
-(that would be selection on test); report the four configs as the configuration comparison.
-Score configs mean ROC-AUC toxic/offensive/hate ≈ 0.86/0.88/0.60 (zero-shot). Binary configs predict
-positive at close to the true rates (toxic 0.37 vs 0.33). Hate F1 is still low (0.09–0.32).
-LLM-best hate: in test fold 3 the validation fold has 1 hate positive, `best_threshold` picked 0.0 and
-all 57 test comments were predicted hate (53 of its 55 hate false positives) — protocol-correct, a
-low-support artefact.
+LLM: every config is far above all trained models and the reference. **`LLM-best` is the
+prespecified LLM system** (the bootstrap contrast "XLM-R vs best LLM config" must use
+`oof_LLM-best.csv`); validation picked 6-shot score in folds 0, 1, 2, 4 and zero-shot score in fold 3
+(`config_selection.csv`). Do not swap in another config because it scored best on test (selection on
+test); report the four configs as the configuration comparison (T6). Score configs ROC-AUC
+toxic/offensive/hate: zero-shot 0.845/0.848/0.648, 6-shot 0.830/0.819/0.636. Zero-shot binary predicts
+positive close to the true rates (toxic 0.343 vs 0.354, offensive 0.199 vs 0.233, hate 0.032 vs 0.040).
+Hate F1 is still low (0.141–0.377).
+LLM-best hate artefact (again, as in v1): test fold 3 is validated on fold 4, which has 1 hate positive;
+the chosen hate threshold predicts hate for all 110 test comments of fold 3 (103 of the 109 hate false
+positives in F2) — protocol-correct, a low-support artefact.
+
+Transformers: both now above the reference (v1: at or below it). Mean ROC-AUC toxic/offensive/hate:
+XLM-R 0.659/0.690/0.498, mBERT 0.633/0.689/0.522, mBERT-lower 0.636/0.682/0.519 — toxic/offensive are
+learned, hate is at chance (hate F1 0.054–0.076). Truncation > 128 tokens: XLM-R 5.6 %, mBERT 8.1 %,
+mBERT-lower 7.2 % of comments (`truncation.csv`).
+
+E3 (T5): n-gram (2,2)/(2,3) 0.321–0.323; cased LR 0.299, SVM 0.300 (worse than lower-cased); mBERT
+lower-cased 0.344 vs cased 0.340. Classical settings: TF-IDF/count, min_df 2, max 50k features,
+C ∈ {0.1, 1, 10}, class_weight ∈ {none, balanced}.
 
 ## Bootstrap (`results/analysis/bootstrap.csv`; 10,000 thread resamples, 97.5 % percentile intervals)
 
-Pooled out-of-fold macro-F1 (transformers = seed-mean predictions, so XLM-R 0.337 here vs 0.298
-mean-over-folds in T3; mBERT 0.346 vs 0.338; LLM-best 0.520 vs 0.509):
+Pooled out-of-fold macro-F1 differs from the mean over folds (transformers = seed-mean predictions):
+XLM-R 0.403 pooled vs 0.350 in T3; mBERT 0.365 vs 0.340; LR-TFIDF 0.341 vs 0.329; LLM-best 0.520 vs
+0.575 (LLM-best is lower pooled because of the fold-3 hate artefact). T3 footnote and
+`results/tables/F1_note.tex` say so.
 
 | Contrast | Type | Δ macro-F1 | 97.5 % interval |
 |---|---|---|---|
-| XLM-R − LR-TFIDF | prespecified | 0.000 | [−0.084, +0.080] |
-| LLM-best − XLM-R | prespecified | +0.184 | [+0.110, +0.253] |
-| LR-TFIDF − All-positive | exploratory | +0.005 | [−0.062, +0.072] |
-| XLM-R − All-positive | exploratory | +0.005 | [−0.048, +0.054] |
-| mBERT − All-positive | exploratory | +0.015 | [−0.038, +0.066] |
-| LLM-best − All-positive | exploratory | +0.188 | [+0.129, +0.248] |
+| XLM-R − LR-TFIDF | prespecified | +0.063 | [+0.024, +0.101] |
+| LLM-best − XLM-R | prespecified | +0.116 | [+0.071, +0.162] |
+| LR-TFIDF − All-positive | exploratory | +0.015 | [−0.019, +0.048] |
+| XLM-R − All-positive | exploratory | +0.078 | [+0.044, +0.109] |
+| mBERT − All-positive | exploratory | +0.039 | [+0.005, +0.072] |
+| LLM-best − All-positive | exploratory | +0.194 | [+0.148, +0.240] |
 
-Only the LLM intervals exclude zero. Tables: `results/tables/T1_dataset.tex` … `T6_llm_configs.tex`
-(`\input{}` them; captions are stubs). Figures: `F1_bootstrap.pdf`, `F2_confusion.pdf` (mBERT, LLM-best).
-Error review files (100 each, with text): `data/07_errors/errors_{mBERT,LLM-best}.csv`.
-
-Transformers: mBERT is only +0.007 above the all-positive reference (within one SD; needs the
-bootstrap), XLM-R is below it. Mean ROC-AUC toxic/offensive/hate: XLM-R 0.52/0.57/0.56,
-mBERT 0.63/0.68/0.64 — XLM-R barely ranks above chance. Hate F1 = 0 in 36–44 % of runs.
-Truncation > 128 tokens: XLM-R 4.9 %, mBERT 7.7 % of comments (`truncation.csv`).
-
-E3: n-gram (2,2)/(2,3) → 0.327 (≈ 60 features, models predict ~95% positive); cased → worse
-(LR 0.296, SVM 0.266). Classical settings: TF-IDF/count, min_df 2, max 50k features,
-C ∈ {0.1, 1, 10}, class_weight ∈ {none, balanced}.
+Both prespecified intervals exclude zero; LR-TFIDF vs the reference does not. Tables:
+`results/tables/T1_dataset.tex` … `T6_llm_configs.tex` (`\input{}` them; captions are stubs).
+Figures: `F1_bootstrap.pdf`, `F2_confusion.pdf` (XLM-R = best trained model, LLM-best). Error review
+files (100 each, with text): `data/07_errors/errors_{XLM-R,LLM-best}.csv` (also `errors_mBERT.csv` from
+the first v2 pass; v1 files in `data/07_errors/v1/`).
 
 ## TODO 1 — Transformers notebook (`notebooks/transformers.ipynb`, local RTX 3070 Ti)
 
@@ -235,11 +222,12 @@ Original spec:
 
 ## Deviations from the Methods (must appear in the paper)
 
-- 600 comments sampled (planned 6,000); 285 usable labeled; 50-comment pilot not labeled.
+- 600 comments sampled (planned 6,000); 554 usable labeled; pilot 50 comments (planned 150).
 - 5 channels / 8 videos per channel; window 2025-10-01 – 2026-09-30.
 - Keyword route: only 91 keyword matches in the pool → 84 keyword comments instead of 300, rest random.
-- Consensus annotation, no independent double labeling → κ not measured (expected only).
-- offensive/hate ⇒ toxic rule applied post hoc (29 labels).
+- Main set labelled by consensus; independent double labelling only on the 50-comment pilot, so κ
+  comes from the pilot only (hate κ undefined: no hate labels in the pilot).
+- offensive/hate ⇒ toxic rule applied post hoc (52 labels).
 - 5-fold grouped CV instead of a single 60/20/20 split.
 - LSTM and BERT+LSTM not run (if skipped); E4 transfer not run (too few comments per condition).
 - LLM demonstrations re-drawn per test fold from its training folds (CV adaptation of "chosen once");
@@ -249,7 +237,5 @@ Original spec:
 
 ## Open items
 
-- Optional real κ: `relabel_60.xlsx` (60 random labeled comments) can be labeled independently by the
-  second annotator; then compute Cohen's κ per label and for language on those 60.
-- `requirements.txt`: transformers pinned (torch CUDA wheel installed separately); add `openai` only if TODO 2 runs.
+- `requirements.txt`: transformers pinned (torch CUDA wheel installed separately); `openai` pinned for TODO 2.
 - README run-order table should be extended as scripts are added.

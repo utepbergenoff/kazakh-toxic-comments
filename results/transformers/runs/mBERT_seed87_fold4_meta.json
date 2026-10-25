@@ -2,82 +2,67 @@
  "system": "mBERT",
  "seed": 87,
  "fold": 4,
- "n_train": 171,
- "n_val": 57,
- "n_test": 57,
- "best_epoch": 10,
- "epochs_run": 10,
- "best_val_loss": 0.4513218751427723,
- "runtime_s": 11.7,
- "peak_gpu_mem_gb": 4.01,
+ "n_train": 333,
+ "n_val": 111,
+ "n_test": 110,
+ "best_epoch": 5,
+ "epochs_run": 7,
+ "best_val_loss": 0.4544284408156936,
+ "runtime_s": 13.7,
+ "peak_gpu_mem_gb": 4.0,
  "history": [
   {
    "epoch": 1,
-   "train_loss": 0.6763141215660884,
-   "val_loss": 0.6117476636206197
+   "train_loss": 0.64505537565764,
+   "val_loss": 0.5405622717138525
   },
   {
    "epoch": 2,
-   "train_loss": 0.5595528228938231,
-   "val_loss": 0.5100684584232799
+   "train_loss": 0.4918546628904295,
+   "val_loss": 0.47225566669269364
   },
   {
    "epoch": 3,
-   "train_loss": 0.49971557453594245,
-   "val_loss": 0.48344115764774076
+   "train_loss": 0.45544935919501045,
+   "val_loss": 0.4640681407115123
   },
   {
    "epoch": 4,
-   "train_loss": 0.47680268464265047,
-   "val_loss": 0.4780891039218122
+   "train_loss": 0.4442532169926274,
+   "val_loss": 0.46184811291393935
   },
   {
    "epoch": 5,
-   "train_loss": 0.46355918229904325,
-   "val_loss": 0.47370453884727076
+   "train_loss": 0.4327499191085617,
+   "val_loss": 0.4544284408156936
   },
   {
    "epoch": 6,
-   "train_loss": 0.4447416153102823,
-   "val_loss": 0.4656147259717796
+   "train_loss": 0.4033013192025033,
+   "val_loss": 0.4620921103445975
   },
   {
    "epoch": 7,
-   "train_loss": 0.43345860524019536,
-   "val_loss": 0.46157643948382104
-  },
-  {
-   "epoch": 8,
-   "train_loss": 0.41382887024163734,
-   "val_loss": 0.45873805932831346
-  },
-  {
-   "epoch": 9,
-   "train_loss": 0.3930755061248125,
-   "val_loss": 0.45337681463587354
-  },
-  {
-   "epoch": 10,
-   "train_loss": 0.38872469331321197,
-   "val_loss": 0.4513218751427723
+   "train_loss": 0.3581578690965135,
+   "val_loss": 0.4704427060422239
   }
  ],
  "choices": [
   {
    "label": "toxic",
-   "threshold": 0.2436424344778061,
-   "val_f1": 0.6181818181818182,
+   "threshold": 0.30569732189178467,
+   "val_f1": 0.5636363636363636,
    "note": ""
   },
   {
    "label": "offensive",
-   "threshold": 0.2766905128955841,
-   "val_f1": 0.56,
+   "threshold": 0.19314736127853394,
+   "val_f1": 0.4722222222222222,
    "note": ""
   },
   {
    "label": "hate",
-   "threshold": 0.23651622235774994,
+   "threshold": 0.05665242671966553,
    "val_f1": 0.4,
    "note": ""
   }

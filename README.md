@@ -26,6 +26,7 @@ Fill `data/00_protocol/channel_list.csv` and `data/00_protocol/keywords.csv`
 | 2. Check the pool | `python src/sample.py --dry-run` | counts per language guess, warnings if thin |
 | 3. Draw the sample | `python src/sample.py` | `data/03_sample/to_label_main.csv`, `to_label_pilot.csv`, `sample.csv`, `sampling_report.md` |
 | 4. Final dataset + folds | `python src/build_dataset.py` | `data/05_final/final_dataset.csv`, `folds.csv`, `dataset_report.md` |
+| 4b. Pilot agreement (Cohen's κ) | `python src/agreement.py` | `results/annotation/agreement.csv` |
 | 5. Classical baselines | `python src/train_classical.py --e3` | `results/classical/` |
 | 6. Transformers (GPU) | `jupyter nbconvert --to notebook --execute --inplace --ExecutePreprocessor.timeout=-1 notebooks/transformers.ipynb` | `results/transformers/` |
 | 7. LLM (gpt-4.1-mini) | `python src/llm.py --dry-run`, then `python src/llm.py` | `results/llm/`, private cache in `data/06_llm/` |

@@ -3,31 +3,32 @@
   "n_resamples": 10000,
   "ci_level": 0.975,
   "resampling_unit": "thread_id",
-  "n_threads": 281,
+  "n_threads": 545,
   "errors_exported": {
-    "mBERT": {
-      "misclassified": 207,
+    "XLM-R": {
+      "misclassified": 354,
       "exported": 100
     },
     "LLM-best": {
-      "misclassified": 120,
+      "misclassified": 223,
       "exported": 100
     }
   },
   "inputs_sha256": {
-    "data/05_final/final_dataset.csv": "24a837f105217643585bd144b22c67cfc3260882e47e4b9ba51e3dd17ae33703",
-    "data/05_final/dataset_report.md": "ae03fd7c9fc378107d24729db968b2a222d572176dd4d4cb7ad713bc92c4b9ce",
-    "results/llm/config_selection.csv": "62ffba2aa4e754429dcd84729a37f0748d3dbc371afebc1cf5b23476c0ba39d1",
-    "results/classical/oof_All-positive.csv": "7a530884e5f06a58983dccf31b912a2b8588e02498b5a3ac599554f5262a3765",
-    "results/classical/oof_LR-TFIDF.csv": "7d915582308560e8b3984620bac37efbe94e7e71c48b5228602318008fb39756",
-    "results/classical/oof_SVM-TFIDF.csv": "438ff7eeefbcc2741481b77988d10edceb69366fba03388449b3ed12f8305b81",
-    "results/classical/oof_LR-Count.csv": "422d4b0412ecaab668c6d7b2d50e7e3665d272fa40c9cea3e14ace6c68090ccb",
-    "results/transformers/oof_XLM-R_seedmean.csv": "7cc32e4398bef7ad0596746d0cfead907320da5ad056f2bafef2490e7037bc3f",
-    "results/transformers/oof_mBERT_seedmean.csv": "9463aeb04b7dd829960a89d6227d27d83b4ba49b48b581cd5c29d44d9cf64eb4",
-    "results/llm/oof_LLM-best.csv": "41e629386b1fd892a5ddcc86316d7274e4fb8f9acf6135b82db2f0c8cbc178ef",
-    "results/classical/summary.csv": "61b57cc69b2abf72af95e9363491653e2aa2e1a5b9e8e5e421818b7d3dc9283e",
-    "results/transformers/summary.csv": "ad754b55222c58107f4f0cbc2428dca485ca9dc964df95469415e39fbc670d19",
-    "results/llm/summary.csv": "25267ba38cca87cf1942ce281e9b6c41e24616460737db482c98a20c5c9399e6"
+    "data/05_final/final_dataset.csv": "e8920375ed9aa4a1fdcec75430f0ac31047f29949edc6f1dcb6ec80e47c1a18a",
+    "data/05_final/dataset_report.md": "92ece492249a0e32a45578367977cc39c15145580814b854e2c4c7d2ea64e3a3",
+    "results/annotation/agreement.csv": "37a159789dc0922a8daf52fe632d0ea958b4614fbaff5d5cb4e04ca74e74c4fd",
+    "results/llm/config_selection.csv": "ac85dabb838ae8ff418e3daa333e7713c50e09676cd279914b78d2af4930d134",
+    "results/classical/oof_All-positive.csv": "755cd0491d96ec7fadd8d05a58909b22dab9e9434745c082ac841cbf769ec8cf",
+    "results/classical/oof_LR-TFIDF.csv": "8fe7dab187f87b48dd22f044dbfec3815fbe237699893c41768c779da0a6f767",
+    "results/classical/oof_SVM-TFIDF.csv": "5b87d5eec3f9560886253d10826b3d99b982087d72665331f49abd4c04b65bb1",
+    "results/classical/oof_LR-Count.csv": "53b341ab0a2f59d332b85143bc8af32a0138b2389d596e621bea288281557bf7",
+    "results/transformers/oof_XLM-R_seedmean.csv": "84137e410aa39f55dcc1b0aecd1630dd56444303f695fcbf9eeae574976dfe52",
+    "results/transformers/oof_mBERT_seedmean.csv": "8330da0ae088864428b0c7496abbac8cba97689ae9d6e0ad6647183835be4ce7",
+    "results/llm/oof_LLM-best.csv": "cc666da1e094059178fe1fa06094bd412a3130ed20bc9db3113fd22ba79291da",
+    "results/classical/summary.csv": "cc539c375bcd99e845f0994f8ee4e6f686613a027986f1ebfe0c143c66c9553f",
+    "results/transformers/summary.csv": "3049d57faf5e6d82d0b51b0ab54197c9a3cbc39f88abd2cf84e8c091d5658680",
+    "results/llm/summary.csv": "a6fed59243307a0df8841af8a4574400eb6504732eb994f5be42ffa0bd772acb"
   },
   "python": "3.12.10",
   "numpy": "2.5.3",

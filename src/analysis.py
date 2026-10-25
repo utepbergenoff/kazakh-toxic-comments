@@ -34,6 +34,10 @@ from metrics import LABELS, LANGS, evaluate  # noqa: E402
 
 DATA = "data/05_final/final_dataset.csv"
 REPORT = "data/05_final/dataset_report.md"
+AGREEMENT = "results/annotation/agreement.csv"
+POOLED_NOTE = ("Bootstrap differences (Figure~\\ref{fig:bootstrap}) are computed on pooled out-of-fold "
+               "predictions (transformers: seed-averaged scores), so their point estimates differ "
+               "from the means over folds in this table.")
 OUT, TABLES, FIGURES, ERRORS = "results/analysis", "results/tables", "results/figures", "data/07_errors"
 SEED = 42
 N_BOOT = 10_000
@@ -53,7 +57,7 @@ EXPLORATORY = [(s, "All-positive") for s in ("LR-TFIDF", "XLM-R", "mBERT", "LLM-
 MAIN = [("All-positive (reference)", "All-positive (reference)"), ("LR-TFIDF", "LR-TFIDF"),
         ("SVM-TFIDF", "SVM-TFIDF"), ("LR-Count", "LR-Count"), ("XLM-R", "XLM-R"), ("mBERT", "mBERT"),
         ("LLM-best", "LLM (best config)")]                                 # (summary name, display name)
-CONFUSION_SYSTEMS = ["mBERT", "LLM-best"]                                  # best trained model, best overall
+CONFUSION_SYSTEMS = ["XLM-R", "LLM-best"]                                # best trained model, best overall
 PRED = [f"pred_{l}" for l in LABELS]
 
 INK, INK_2, GRID, SERIES_1 = "#0b0b0b", "#52514e", "#d9d8d4", "#2a78d6"
@@ -200,7 +204,9 @@ def bold_max(values, cells):
 
 
 def table_dataset(df):
-    assert len(df) == 285 and [int(df[l].sum()) for l in LABELS] == [94, 67, 18]
+    with open(REPORT, encoding="utf-8") as f:
+        total = re.search(r"^\|\s*All\s*\|\s*(\d+)\s*\|\s*(\d+)\s*\|\s*(\d+)\s*\|\s*(\d+)\s*\|$", f.read(), re.M)
+    assert [len(df)] + [int(df[l].sum()) for l in LABELS] == [int(v) for v in total.groups()], total.groups()
     rows = []
     for lang in LANGS + ["All"]:
         d = df if lang == "All" else df[df.lang == lang]
@@ -216,18 +222,26 @@ def table_annotation():
         report = f.read()
     status = dict(re.findall(r"^\|\s*([a-zA-Z_]+)\s*\|\s*(\d+)\s*\|$", report.split("## Usable")[0], re.M))
     changed = re.search(r"\((\d+) toxic labels changed", report).group(1)
-    names = [("used", "Used (labelled, KK/RU/CS)"), ("not_annotated", "Not annotated (time)"),
+    names = [("used", "Used (labelled, KK/RU/CS)"), ("not_annotated", "Not annotated"),
              ("excluded_UNCLEAR", "Excluded: unclear"), ("excluded_UNCLEAR_incomplete", "Excluded: incomplete labels"),
              ("excluded_NOTKKRU", "Excluded: not Kazakh or Russian")]
     assert set(status) == {k for k, _ in names}, status
-    rows = [[n, status[k]] for k, n in names]
-    rows += [None, ["Sampled main comments", str(sum(int(v) for v in status.values()))], None,
-             ["Toxic labels set by the offensive/hate $\\Rightarrow$ toxic rule", changed],
-             ["Inter-annotator agreement (Cohen's $\\kappa$)", "expected $\\geq 0.60$ (not measured)"]]
-    latex_table(f"{TABLES}/T2_annotation.tex", "Annotation outcome of the sampled main comments.",
-                "tab:annotation", ["", "n"], rows, "lr",
-                ["Labels were assigned by consensus; no independent double annotation was available, "
-                 "so $\\kappa$ could not be computed."])
+    rows = [[n, status[k], "", ""] for k, n in names]
+    rows += [None, ["Sampled main comments", str(sum(int(v) for v in status.values())), "", ""], None,
+             ["Toxic labels set by the offensive/hate $\\Rightarrow$ toxic rule", changed, "", ""], None,
+             [r"\textit{Pilot, independent double annotation}", "n", "Agreement", "Cohen's $\\kappa$"]]
+    agree = pd.read_csv(AGREEMENT)
+    items = [("exclude decision", "Exclude decision"), ("lang", "Language condition"), ("toxic", "Toxic"),
+             ("offensive", "Offensive"), ("hate", "Hate")]
+    assert list(agree["item"]) == [k for k, _ in items], list(agree["item"])
+    for (_, disp), (_, r) in zip(items, agree.iterrows()):
+        rows.append([disp, str(int(r.n)), f3(r.observed_agreement), "undefined" if pd.isna(r.kappa) else f3(r.kappa)])
+    latex_table(f"{TABLES}/T2_annotation.tex", "Annotation outcome of the sampled main comments and "
+                "inter-annotator agreement on the pilot.", "tab:annotation", ["", "n", "", ""], rows, "lrrr",
+                ["Main comments were labelled by consensus. Agreement was measured on the pilot comments, "
+                 "which both annotators labelled independently; language and label agreement use the "
+                 "comments that both annotators kept. Hate $\\kappa$ is undefined because neither annotator "
+                 "assigned a hate label in the pilot."])
 
 
 def table_main(summary):
@@ -245,7 +259,8 @@ def table_main(summary):
                              "Exact match"], rows, "lrrrrrr",
                 ["Mean over the 5 test folds; macro-F1 also $\\pm$ SD over folds. Transformers: fold metrics "
                  f"averaged over 5 seeds (SD of the 5-fold mean over seeds: {seed_sd}). LLM: configuration "
-                 "chosen per fold on validation macro-F1. Best value per column in bold."])
+                 "chosen per fold on validation macro-F1. Best value per column in bold. "
+                 + POOLED_NOTE])
 
 
 def table_language(summary, df):
@@ -333,6 +348,10 @@ def figure_bootstrap(boot):
     axes[-1].set_xlabel(f"Difference in macro-F1 (point estimate and {CI:.1%} paired grouped bootstrap interval)")
     fig.savefig(f"{FIGURES}/F1_bootstrap.pdf", bbox_inches="tight")
     plt.close(fig)
+    with open(f"{TABLES}/F1_note.tex", "w", encoding="utf-8") as f:   # sentence for the F1 caption
+        f.write("% \\label{fig:bootstrap}\nDifferences use pooled out-of-fold predictions (transformers: "
+                "seed-averaged scores), so point estimates differ from the means over folds in "
+                "Table~\\ref{tab:main}.\n")
 
 
 def figure_confusion(conf):
@@ -385,7 +404,7 @@ def main():
     figure_bootstrap(boot)
     figure_confusion(conf)
 
-    inputs = [DATA, REPORT, "results/llm/config_selection.csv"] + list(OOF.values()) + SUMMARIES
+    inputs = [DATA, REPORT, AGREEMENT, "results/llm/config_selection.csv"] + list(OOF.values()) + SUMMARIES
     with open(f"{OUT}/run_info.json", "w") as f:
         json.dump({"seed": SEED, "n_resamples": N_BOOT, "ci_level": CI, "resampling_unit": "thread_id",
                    "n_threads": int(boot.n_threads.iloc[0]), "errors_exported": errors,

@@ -2,58 +2,68 @@
  "system": "XLM-R",
  "seed": 87,
  "fold": 4,
- "n_train": 171,
- "n_val": 57,
- "n_test": 57,
- "best_epoch": 3,
- "epochs_run": 5,
- "best_val_loss": 0.5072675336871231,
- "runtime_s": 6.9,
- "peak_gpu_mem_gb": 5.48,
+ "n_train": 333,
+ "n_val": 111,
+ "n_test": 110,
+ "best_epoch": 5,
+ "epochs_run": 7,
+ "best_val_loss": 0.46052824770724093,
+ "runtime_s": 15.8,
+ "peak_gpu_mem_gb": 5.49,
  "history": [
   {
    "epoch": 1,
-   "train_loss": 0.758368018077828,
-   "val_loss": 0.7335875215586166
+   "train_loss": 0.7483893347693397,
+   "val_loss": 0.6943337036682679
   },
   {
    "epoch": 2,
-   "train_loss": 0.6314784564934743,
-   "val_loss": 0.5264324110153823
+   "train_loss": 0.5472911017554419,
+   "val_loss": 0.4922083977822427
   },
   {
    "epoch": 3,
-   "train_loss": 0.5352522532145182,
-   "val_loss": 0.5072675336871231
+   "train_loss": 0.4705351083963602,
+   "val_loss": 0.47623308714445645
   },
   {
    "epoch": 4,
-   "train_loss": 0.5141292780231081,
-   "val_loss": 0.5077535729659232
+   "train_loss": 0.47260391151344217,
+   "val_loss": 0.4726013865198817
   },
   {
    "epoch": 5,
-   "train_loss": 0.5105275141100669,
-   "val_loss": 0.5140376899674622
+   "train_loss": 0.47122478962421893,
+   "val_loss": 0.46052824770724093
+  },
+  {
+   "epoch": 6,
+   "train_loss": 0.4527370216132881,
+   "val_loss": 0.46300546399823894
+  },
+  {
+   "epoch": 7,
+   "train_loss": 0.4462134492051255,
+   "val_loss": 0.46484856705765826
   }
  ],
  "choices": [
   {
    "label": "toxic",
-   "threshold": 0.32082128524780273,
-   "val_f1": 0.5333333333333333,
+   "threshold": 0.34510529041290283,
+   "val_f1": 0.6153846153846154,
    "note": ""
   },
   {
    "label": "offensive",
-   "threshold": 0.40497803688049316,
-   "val_f1": 0.4583333333333333,
+   "threshold": 0.2133771777153015,
+   "val_f1": 0.4742268041237113,
    "note": ""
   },
   {
    "label": "hate",
-   "threshold": 0.16451646387577057,
-   "val_f1": 0.4,
+   "threshold": 0.034618835896253586,
+   "val_f1": 0.1702127659574468,
    "note": ""
   }
  ]

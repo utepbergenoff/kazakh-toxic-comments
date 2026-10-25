@@ -6,12 +6,12 @@
 \toprule
 Configuration & Macro-F1 & Toxic F1 & Off.\ F1 & Hate F1 & AUC tox. & AUC off. & AUC hate & Chosen \\
 \midrule
-Zero-shot, binary & 0.567 $\pm$ 0.099 & 0.731 & 0.676 & 0.293 & -- & -- & -- & 1 \\
-Zero-shot, score & 0.533 $\pm$ 0.087 & 0.678 & 0.715 & 0.206 & 0.855 & 0.877 & 0.600 & 2 \\
-6-shot, binary & 0.547 $\pm$ 0.095 & 0.710 & 0.613 & 0.318 & -- & -- & -- & 0 \\
-6-shot, score & 0.498 $\pm$ 0.062 & 0.743 & 0.644 & 0.106 & 0.856 & 0.831 & 0.615 & 2 \\
+Zero-shot, binary & 0.580 $\pm$ 0.097 & 0.725 & 0.645 & 0.370 & -- & -- & -- & 0 \\
+Zero-shot, score & 0.497 $\pm$ 0.063 & 0.708 & 0.642 & 0.141 & 0.845 & 0.848 & 0.648 & 1 \\
+6-shot, binary & 0.581 $\pm$ 0.088 & 0.709 & 0.658 & 0.377 & -- & -- & -- & 0 \\
+6-shot, score & 0.582 $\pm$ 0.096 & 0.755 & 0.664 & 0.326 & 0.830 & 0.819 & 0.636 & 4 \\
 \midrule
-Selected per fold (LLM best) & 0.509 $\pm$ 0.059 & 0.736 & 0.699 & 0.093 & -- & -- & -- & -- \\
+Selected per fold (LLM best) & 0.575 $\pm$ 0.104 & 0.757 & 0.641 & 0.326 & -- & -- & -- & -- \\
 \bottomrule
 \end{tabular}
 \par\smallskip\footnotesize Mean over the 5 test folds. ROC-AUC only for score configurations. Chosen = number of test folds for which the configuration had the highest validation macro-F1.

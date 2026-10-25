@@ -1,22 +1,28 @@
 \begin{table}[htbp]
 \centering
-\caption{Annotation outcome of the sampled main comments.}
+\caption{Annotation outcome of the sampled main comments and inter-annotator agreement on the pilot.}
 \label{tab:annotation}
-\begin{tabular}{lr}
+\begin{tabular}{lrrr}
 \toprule
- & n \\
+ & n &  &  \\
 \midrule
-Used (labelled, KK/RU/CS) & 285 \\
-Not annotated (time) & 292 \\
-Excluded: unclear & 10 \\
-Excluded: incomplete labels & 8 \\
-Excluded: not Kazakh or Russian & 5 \\
+Used (labelled, KK/RU/CS) & 554 &  &  \\
+Not annotated & 2 &  &  \\
+Excluded: unclear & 25 &  &  \\
+Excluded: incomplete labels & 10 &  &  \\
+Excluded: not Kazakh or Russian & 9 &  &  \\
 \midrule
-Sampled main comments & 600 \\
+Sampled main comments & 600 &  &  \\
 \midrule
-Toxic labels set by the offensive/hate $\Rightarrow$ toxic rule & 29 \\
-Inter-annotator agreement (Cohen's $\kappa$) & expected $\geq 0.60$ (not measured) \\
+Toxic labels set by the offensive/hate $\Rightarrow$ toxic rule & 52 &  &  \\
+\midrule
+\textit{Pilot, independent double annotation} & n & Agreement & Cohen's $\kappa$ \\
+Exclude decision & 50 & 0.920 & 0.567 \\
+Language condition & 42 & 0.952 & 0.926 \\
+Toxic & 41 & 0.927 & 0.726 \\
+Offensive & 41 & 0.878 & 0.555 \\
+Hate & 41 & 1.000 & undefined \\
 \bottomrule
 \end{tabular}
-\par\smallskip\footnotesize Labels were assigned by consensus; no independent double annotation was available, so $\kappa$ could not be computed.
+\par\smallskip\footnotesize Main comments were labelled by consensus. Agreement was measured on the pilot comments, which both annotators labelled independently; language and label agreement use the comments that both annotators kept. Hate $\kappa$ is undefined because neither annotator assigned a hate label in the pilot.
 \end{table}

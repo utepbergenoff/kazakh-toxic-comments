@@ -6,16 +6,16 @@
 \toprule
 System & Macro-F1 & Toxic F1 & Offensive F1 & Hate F1 & Micro-F1 & Exact match \\
 \midrule
-All-positive (reference) & 0.331 $\pm$ 0.020 & 0.496 & 0.380 & 0.117 & 0.346 & 0.042 \\
-LR-TFIDF & 0.319 $\pm$ 0.083 & 0.484 & 0.304 & \textbf{0.168} & 0.393 & 0.263 \\
-SVM-TFIDF & 0.286 $\pm$ 0.056 & 0.435 & 0.289 & 0.134 & 0.367 & 0.284 \\
-LR-Count & 0.273 $\pm$ 0.093 & 0.479 & 0.190 & 0.149 & 0.357 & 0.193 \\
+All-positive (reference) & 0.325 $\pm$ 0.009 & 0.523 & 0.377 & 0.075 & 0.345 & 0.025 \\
+LR-TFIDF & 0.329 $\pm$ 0.046 & 0.535 & 0.333 & 0.117 & 0.411 & 0.285 \\
+SVM-TFIDF & 0.318 $\pm$ 0.038 & 0.522 & 0.331 & 0.100 & 0.403 & 0.276 \\
+LR-Count & 0.310 $\pm$ 0.031 & 0.499 & 0.356 & 0.075 & 0.390 & 0.242 \\
 \midrule
-XLM-R & 0.298 $\pm$ 0.031 & 0.442 & 0.375 & 0.077 & 0.369 & 0.221 \\
-mBERT & 0.338 $\pm$ 0.028 & 0.509 & 0.406 & 0.100 & 0.411 & 0.249 \\
+XLM-R & 0.350 $\pm$ 0.019 & 0.560 & 0.435 & 0.054 & 0.440 & 0.275 \\
+mBERT & 0.340 $\pm$ 0.043 & 0.533 & 0.414 & 0.075 & 0.426 & 0.213 \\
 \midrule
-LLM (best config) & \textbf{0.509} $\pm$ 0.059 & \textbf{0.736} & \textbf{0.699} & 0.093 & \textbf{0.645} & \textbf{0.579} \\
+LLM (best config) & \textbf{0.575} $\pm$ 0.104 & \textbf{0.757} & \textbf{0.641} & \textbf{0.326} & \textbf{0.652} & \textbf{0.597} \\
 \bottomrule
 \end{tabular}
-\par\smallskip\footnotesize Mean over the 5 test folds; macro-F1 also $\pm$ SD over folds. Transformers: fold metrics averaged over 5 seeds (SD of the 5-fold mean over seeds: XLM-R 0.023, mBERT 0.037). LLM: configuration chosen per fold on validation macro-F1. Best value per column in bold.
+\par\smallskip\footnotesize Mean over the 5 test folds; macro-F1 also $\pm$ SD over folds. Transformers: fold metrics averaged over 5 seeds (SD of the 5-fold mean over seeds: XLM-R 0.019, mBERT 0.010). LLM: configuration chosen per fold on validation macro-F1. Best value per column in bold. Bootstrap differences (Figure~\ref{fig:bootstrap}) are computed on pooled out-of-fold predictions (transformers: seed-averaged scores), so their point estimates differ from the means over folds in this table.
 \end{table}
