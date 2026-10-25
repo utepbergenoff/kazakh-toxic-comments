@@ -1,0 +1,24 @@
+\begin{table}[htbp]
+\centering
+\caption{Representation ablation (E3).}
+\label{tab:ablation}
+\begin{tabular}{llrrrr}
+\toprule
+Model & Variant & Macro-F1 & KK & RU & CS \\
+\midrule
+LR & TF-IDF word (1,2), lower-cased & 0.319 $\pm$ 0.083 & 0.233 & 0.394 & 0.315 \\
+LR & TF-IDF word (2,2) & 0.327 $\pm$ 0.014 & 0.285 & 0.363 & 0.346 \\
+LR & TF-IDF word (2,3) & 0.327 $\pm$ 0.014 & 0.284 & 0.363 & 0.346 \\
+LR & TF-IDF word (1,2), cased & 0.296 $\pm$ 0.068 & 0.187 & 0.393 & 0.322 \\
+\midrule
+SVM & TF-IDF word (1,2), lower-cased & 0.286 $\pm$ 0.056 & 0.229 & 0.348 & 0.305 \\
+SVM & TF-IDF word (2,2) & 0.327 $\pm$ 0.014 & 0.284 & 0.363 & 0.346 \\
+SVM & TF-IDF word (2,3) & 0.327 $\pm$ 0.014 & 0.284 & 0.363 & 0.346 \\
+SVM & TF-IDF word (1,2), cased & 0.266 $\pm$ 0.049 & 0.216 & 0.311 & 0.346 \\
+\midrule
+mBERT & cased input (default) & 0.338 $\pm$ 0.028 & 0.306 & 0.403 & 0.308 \\
+mBERT & lower-cased input & 0.331 $\pm$ 0.024 & 0.288 & 0.406 & 0.328 \\
+\bottomrule
+\end{tabular}
+\par\smallskip\footnotesize Macro-F1 mean $\pm$ SD over the 5 test folds; per-language values on pooled out-of-fold predictions.
+\end{table}

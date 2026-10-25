@@ -1,0 +1,21 @@
+\begin{table}[htbp]
+\centering
+\caption{Main results (E1), 5-fold grouped cross-validation.}
+\label{tab:main}
+\begin{tabular}{lrrrrrr}
+\toprule
+System & Macro-F1 & Toxic F1 & Offensive F1 & Hate F1 & Micro-F1 & Exact match \\
+\midrule
+All-positive (reference) & 0.331 $\pm$ 0.020 & 0.496 & 0.380 & 0.117 & 0.346 & 0.042 \\
+LR-TFIDF & 0.319 $\pm$ 0.083 & 0.484 & 0.304 & \textbf{0.168} & 0.393 & 0.263 \\
+SVM-TFIDF & 0.286 $\pm$ 0.056 & 0.435 & 0.289 & 0.134 & 0.367 & 0.284 \\
+LR-Count & 0.273 $\pm$ 0.093 & 0.479 & 0.190 & 0.149 & 0.357 & 0.193 \\
+\midrule
+XLM-R & 0.298 $\pm$ 0.031 & 0.442 & 0.375 & 0.077 & 0.369 & 0.221 \\
+mBERT & 0.338 $\pm$ 0.028 & 0.509 & 0.406 & 0.100 & 0.411 & 0.249 \\
+\midrule
+LLM (best config) & \textbf{0.509} $\pm$ 0.059 & \textbf{0.736} & \textbf{0.699} & 0.093 & \textbf{0.645} & \textbf{0.579} \\
+\bottomrule
+\end{tabular}
+\par\smallskip\footnotesize Mean over the 5 test folds; macro-F1 also $\pm$ SD over folds. Transformers: fold metrics averaged over 5 seeds (SD of the 5-fold mean over seeds: XLM-R 0.023, mBERT 0.037). LLM: configuration chosen per fold on validation macro-F1. Best value per column in bold.
+\end{table}

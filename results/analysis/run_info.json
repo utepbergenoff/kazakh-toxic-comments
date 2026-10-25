@@ -1,0 +1,36 @@
+{
+  "seed": 42,
+  "n_resamples": 10000,
+  "ci_level": 0.975,
+  "resampling_unit": "thread_id",
+  "n_threads": 281,
+  "errors_exported": {
+    "mBERT": {
+      "misclassified": 207,
+      "exported": 100
+    },
+    "LLM-best": {
+      "misclassified": 120,
+      "exported": 100
+    }
+  },
+  "inputs_sha256": {
+    "data/05_final/final_dataset.csv": "24a837f105217643585bd144b22c67cfc3260882e47e4b9ba51e3dd17ae33703",
+    "data/05_final/dataset_report.md": "ae03fd7c9fc378107d24729db968b2a222d572176dd4d4cb7ad713bc92c4b9ce",
+    "results/llm/config_selection.csv": "62ffba2aa4e754429dcd84729a37f0748d3dbc371afebc1cf5b23476c0ba39d1",
+    "results/classical/oof_All-positive.csv": "7a530884e5f06a58983dccf31b912a2b8588e02498b5a3ac599554f5262a3765",
+    "results/classical/oof_LR-TFIDF.csv": "7d915582308560e8b3984620bac37efbe94e7e71c48b5228602318008fb39756",
+    "results/classical/oof_SVM-TFIDF.csv": "438ff7eeefbcc2741481b77988d10edceb69366fba03388449b3ed12f8305b81",
+    "results/classical/oof_LR-Count.csv": "422d4b0412ecaab668c6d7b2d50e7e3665d272fa40c9cea3e14ace6c68090ccb",
+    "results/transformers/oof_XLM-R_seedmean.csv": "7cc32e4398bef7ad0596746d0cfead907320da5ad056f2bafef2490e7037bc3f",
+    "results/transformers/oof_mBERT_seedmean.csv": "9463aeb04b7dd829960a89d6227d27d83b4ba49b48b581cd5c29d44d9cf64eb4",
+    "results/llm/oof_LLM-best.csv": "41e629386b1fd892a5ddcc86316d7274e4fb8f9acf6135b82db2f0c8cbc178ef",
+    "results/classical/summary.csv": "61b57cc69b2abf72af95e9363491653e2aa2e1a5b9e8e5e421818b7d3dc9283e",
+    "results/transformers/summary.csv": "ad754b55222c58107f4f0cbc2428dca485ca9dc964df95469415e39fbc670d19",
+    "results/llm/summary.csv": "25267ba38cca87cf1942ce281e9b6c41e24616460737db482c98a20c5c9399e6"
+  },
+  "python": "3.12.10",
+  "numpy": "2.5.3",
+  "pandas": "3.0.6",
+  "matplotlib": "3.11.2"
+}

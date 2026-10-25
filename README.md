@@ -29,6 +29,7 @@ Fill `data/00_protocol/channel_list.csv` and `data/00_protocol/keywords.csv`
 | 5. Classical baselines | `python src/train_classical.py --e3` | `results/classical/` |
 | 6. Transformers (GPU) | `jupyter nbconvert --to notebook --execute --inplace --ExecutePreprocessor.timeout=-1 notebooks/transformers.ipynb` | `results/transformers/` |
 | 7. LLM (gpt-4.1-mini) | `python src/llm.py --dry-run`, then `python src/llm.py` | `results/llm/`, private cache in `data/06_llm/` |
+| 8. Bootstrap, tables, figures | `python src/analysis.py` | `results/analysis/`, `results/tables/`, `results/figures/`, private `data/07_errors/` |
 
 All study settings (time window, videos per channel, sample sizes, seed) are in `config.py`.
 

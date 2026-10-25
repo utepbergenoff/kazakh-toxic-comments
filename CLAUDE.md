@@ -39,7 +39,7 @@ The deadline is tight. Prefer working, simple code over completeness. Ask before
 | Transformers (XLM-R, mBERT, E3 mBERT-lower) | `notebooks/transformers.ipynb` | done (75 runs, 12.9 min on RTX 3070 Ti) | `results/transformers/` |
 | LSTM, BERT+LSTM | — | **optional / likely skipped** (report as time deviation) | |
 | LLM (gpt-4.1-mini) | `src/llm.py` | done (1,710 calls, 0 fallbacks, $0.61) | `results/llm/`, private cache `data/06_llm/` |
-| Bootstrap, confusion matrices, figures, LaTeX tables | `src/analysis.py` | **TODO** | `results/figures/`, `results/tables/` |
+| Bootstrap, confusion matrices, figures, LaTeX tables | `src/analysis.py` | done | `results/analysis/`, `results/tables/` (T1–T6), `results/figures/` (F1, F2), private `data/07_errors/` |
 
 Shared config: `config.py` (paths, seed 42, sampling sizes). Shared metrics: `src/metrics.py`
 (`evaluate`, `best_threshold`, `by_language`) — **reuse it for every model** so numbers are comparable.
@@ -99,6 +99,27 @@ did worse on test than zero-shot binary. Do not swap in zero-shot binary because
 (that would be selection on test); report the four configs as the configuration comparison.
 Score configs mean ROC-AUC toxic/offensive/hate ≈ 0.86/0.88/0.60 (zero-shot). Binary configs predict
 positive at close to the true rates (toxic 0.37 vs 0.33). Hate F1 is still low (0.09–0.32).
+LLM-best hate: in test fold 3 the validation fold has 1 hate positive, `best_threshold` picked 0.0 and
+all 57 test comments were predicted hate (53 of its 55 hate false positives) — protocol-correct, a
+low-support artefact.
+
+## Bootstrap (`results/analysis/bootstrap.csv`; 10,000 thread resamples, 97.5 % percentile intervals)
+
+Pooled out-of-fold macro-F1 (transformers = seed-mean predictions, so XLM-R 0.337 here vs 0.298
+mean-over-folds in T3; mBERT 0.346 vs 0.338; LLM-best 0.520 vs 0.509):
+
+| Contrast | Type | Δ macro-F1 | 97.5 % interval |
+|---|---|---|---|
+| XLM-R − LR-TFIDF | prespecified | 0.000 | [−0.084, +0.080] |
+| LLM-best − XLM-R | prespecified | +0.184 | [+0.110, +0.253] |
+| LR-TFIDF − All-positive | exploratory | +0.005 | [−0.062, +0.072] |
+| XLM-R − All-positive | exploratory | +0.005 | [−0.048, +0.054] |
+| mBERT − All-positive | exploratory | +0.015 | [−0.038, +0.066] |
+| LLM-best − All-positive | exploratory | +0.188 | [+0.129, +0.248] |
+
+Only the LLM intervals exclude zero. Tables: `results/tables/T1_dataset.tex` … `T6_llm_configs.tex`
+(`\input{}` them; captions are stubs). Figures: `F1_bootstrap.pdf`, `F2_confusion.pdf` (mBERT, LLM-best).
+Error review files (100 each, with text): `data/07_errors/errors_{mBERT,LLM-best}.csv`.
 
 Transformers: mBERT is only +0.007 above the all-positive reference (within one SD; needs the
 bootstrap), XLM-R is below it. Mean ROC-AUC toxic/offensive/hate: XLM-R 0.52/0.57/0.56,
@@ -164,7 +185,7 @@ Original spec:
   snapshot, dates, fallback counts. Cache responses on disk so reruns cost nothing.
 - Score configs: threshold from validation fold. Config selection on validation macro-F1.
 
-## TODO 3 — Analysis (`src/analysis.py`)
+## TODO 3 — Analysis (`src/analysis.py`) — done (spec kept below; T6 = LLM configurations added)
 
 - **Paired grouped bootstrap**, 10,000 resamples of whole `thread_id` groups over the pooled
   out-of-fold predictions; difference in macro-F1; **97.5% percentile intervals** for the two

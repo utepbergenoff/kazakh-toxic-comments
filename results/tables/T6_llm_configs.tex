@@ -1,0 +1,18 @@
+\begin{table}[htbp]
+\centering
+\caption{LLM configurations (gpt-4.1-mini-2025-04-14).}
+\label{tab:llm}
+\begin{tabular}{lrrrrrrrr}
+\toprule
+Configuration & Macro-F1 & Toxic F1 & Off.\ F1 & Hate F1 & AUC tox. & AUC off. & AUC hate & Chosen \\
+\midrule
+Zero-shot, binary & 0.567 $\pm$ 0.099 & 0.731 & 0.676 & 0.293 & -- & -- & -- & 1 \\
+Zero-shot, score & 0.533 $\pm$ 0.087 & 0.678 & 0.715 & 0.206 & 0.855 & 0.877 & 0.600 & 2 \\
+6-shot, binary & 0.547 $\pm$ 0.095 & 0.710 & 0.613 & 0.318 & -- & -- & -- & 0 \\
+6-shot, score & 0.498 $\pm$ 0.062 & 0.743 & 0.644 & 0.106 & 0.856 & 0.831 & 0.615 & 2 \\
+\midrule
+Selected per fold (LLM best) & 0.509 $\pm$ 0.059 & 0.736 & 0.699 & 0.093 & -- & -- & -- & -- \\
+\bottomrule
+\end{tabular}
+\par\smallskip\footnotesize Mean over the 5 test folds. ROC-AUC only for score configurations. Chosen = number of test folds for which the configuration had the highest validation macro-F1.
+\end{table}

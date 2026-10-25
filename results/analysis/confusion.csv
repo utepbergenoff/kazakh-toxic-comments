@@ -1,0 +1,7 @@
+system,label,tn,fp,fn,tp
+mBERT,toxic,74,117,17,77
+mBERT,offensive,164,54,40,27
+mBERT,hate,205,62,12,6
+LLM-best,toxic,152,39,17,77
+LLM-best,offensive,192,26,17,50
+LLM-best,hate,212,55,13,5
