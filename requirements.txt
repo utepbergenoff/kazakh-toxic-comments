@@ -9,3 +9,6 @@ transformers==5.20.2
 nbconvert>=7.17
 # src/llm.py
 openai==3.37.0
+
+# Figures produced by src/analysis.py
+matplotlib==3.11.2

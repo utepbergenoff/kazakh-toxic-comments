@@ -1,0 +1,7 @@
+system,label,tn,fp,fn,tp
+XLM-R,toxic,180,178,38,158
+XLM-R,offensive,289,136,35,94
+XLM-R,hate,368,164,13,9
+LLM-best,toxic,302,56,43,153
+LLM-best,offensive,376,49,46,83
+LLM-best,hate,423,109,10,12

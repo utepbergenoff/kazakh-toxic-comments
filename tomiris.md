@@ -1,3 +1,5 @@
+> Final reproducibility update: the repository is public. Use the current README and `python reproduce.py` for text-free numerical verification. Source-text files are no longer tracked at HEAD; historical commits are not scrubbed. Original annotation sheets/API cache are unavailable to this release. The article now states that authorization documentation is unavailable. The table values below remain unchanged; completed article edits supersede its old checklist.
+
 # Handover for Tomiris — v2 results (554 comments) and what changes in the paper
 
 Everything below was produced by the scripts in this repo on **2026-10-25** and pushed to GitHub
@@ -37,7 +39,7 @@ all-positive reference (in v1 they did not), and the LLM still beats everything 
 | Confusion matrices | `results/analysis/confusion.csv` |
 | Run logs / settings | `results/*/run_info.json`, `results/*/hyperparameters.csv` |
 | LLM prompts | `results/llm/prompt_templates.md`, demo ids in `results/llm/demonstrations.csv` |
-| Misclassified comments for error analysis (**contain comment text — repo must stay private**) | `data/07_errors/errors_XLM-R.csv`, `errors_LLM-best.csv` (+ `errors_mBERT.csv`); UTF-8 with BOM, opens in Excel |
+| Misclassified comments for error analysis (**contain comment text — source text is excluded from the current release**) | `data/07_errors/errors_XLM-R.csv`, `errors_LLM-best.csv` (+ `errors_mBERT.csv`); UTF-8 with BOM, opens in Excel |
 
 Captions in the `.tex` files are stubs — rewrite them however you like, but keep the `\label`s
 (`tab:dataset`, `tab:annotation`, `tab:main`, `tab:language`, `tab:ablation`, `tab:llm`) or update the

@@ -1,0 +1,14 @@
+XLM-R fold/seed mean 0.349849 pooled seed-metric mean 0.361811 pooled ensemble 0.403323
+mBERT fold/seed mean 0.340303 pooled seed-metric mean 0.356845 pooled ensemble 0.364799
+mBERT-lower fold/seed mean 0.343921 pooled seed-metric mean 0.359703 pooled ensemble 0.351015
+Independent metric recomputation: files 30 summary errors 0 []
+Language/label totals {('toxic', 'count'): {'CS': 99, 'KK': 225, 'RU': 230}, ('toxic', 'sum'): {'CS': 34, 'KK': 74, 'RU': 88}, ('offensive', 'count'): {'CS': 99, 'KK': 225, 'RU': 230}, ('offensive', 'sum'): {'CS': 20, 'KK': 48, 'RU': 61}, ('hate', 'count'): {'CS': 99, 'KK': 225, 'RU': 230}, ('hate', 'sum'): {'CS': 2, 'KK': 8, 'RU': 12}}
+LLM configuration selection and chosen predictions: PASS
+Confusion XLM-R_seedmean TN/FP/FN/TP [[180, 178, 38, 158], [289, 136, 35, 94], [368, 164, 13, 9]]
+Confusion LLM-best TN/FP/FN/TP [[302, 56, 43, 153], [376, 49, 46, 83], [423, 109, 10, 12]]
+T7 verified: 33 rows, 396 means/SDs matched independent recomputation.
+Recovered sample metadata: all evaluated IDs matched; 545 threads
+Threads appearing in more than one test fold: 0
+All six published bootstrap contrasts independently reproduced: PASS
+
+PASS: all recorded metrics and six bootstrap contrasts reproduced.
