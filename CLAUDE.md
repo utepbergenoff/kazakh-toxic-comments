@@ -20,7 +20,8 @@ The deadline is tight. Prefer working, simple code over completeness. Ask before
 4. **Privacy.** `data/01_raw` … `data/05_final/final_dataset.csv` contain comment text. They are listed
    in `.gitignore`, but `data/01_raw/`, `data/02_pool/`, `data/03_sample/` and
    `data/04_annotation/{annotation,annot_tomiris}.xlsx` were committed on purpose (commit bfd6b6d), so the
-   GitHub repo **must stay private**. `labels.xlsx` and `final_dataset.csv` are not committed; do not add
+   GitHub repo **must stay private**. `data/07_errors/errors_{XLM-R,LLM-best,mBERT}.csv` (v2, 100 comments each) were force-added on request
+for the teammate's error analysis (folder still ignored). `labels.xlsx` and `final_dataset.csv` are not committed; do not add
    more text files without asking, and never print large chunks of comment text. `folds.csv` (ids only)
    may be committed. API keys live only in `.env`.
 5. Platform is **Windows** (files may have CRLF line endings). Run everything with the venv one level up
