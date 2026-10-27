@@ -14,3 +14,5 @@ check_api.py
 data/06_llm/
 data/07_errors/
 .ruff_cache/
+CLAUDE.md
+tomiris.md
